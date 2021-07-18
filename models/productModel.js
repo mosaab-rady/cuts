@@ -116,7 +116,6 @@ const productSchema = new mongoose.Schema({
       default: 0,
     },
   },
-  quantity: Number,
   imageCover: {
     type: String,
     required: [true, 'A product must have image cover'],
@@ -143,13 +142,6 @@ const productSchema = new mongoose.Schema({
 // add slug to document before save to DB
 productSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true });
-  this.quantity =
-    this.size.small +
-    this.size.medium +
-    this.size.large +
-    this.size.xLarge +
-    this.size.xxLarge;
-
   next();
 });
 

@@ -3,7 +3,9 @@ const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getAllProducts = catchAsync(async (req, res, next) => {
-  const products = await Product.find();
+  const products = await Product.find().select(
+    'name model type imageCover imageDetail size price sale color cut  collar'
+  );
   res.status(200).json({
     status: 'success',
     products: products.length,
@@ -28,15 +30,24 @@ exports.getProductById = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   //  2) find the product
   const product = await Product.findById(id);
+
   // 3) if no product send err
   if (!product) {
     return next(new AppError('No product found with that ID', 404));
   }
+
+  // find all model colors
+  const colors = await Product.find({
+    model: product.model,
+    fabric: product.fabric,
+  }).select('color');
+
   // 4) send the res
   res.status(200).json({
     status: 'success',
     data: {
       product,
+      availableColors: colors,
     },
   });
 });
