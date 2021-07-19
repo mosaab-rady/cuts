@@ -5,6 +5,7 @@ const globalErrorHandler = require('./conrollers/errorController');
 
 // export routes
 const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 // routes
 app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/users', userRoutes);
 
 // handling error
 app.use(globalErrorHandler);

@@ -8,7 +8,7 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
   );
   res.status(200).json({
     status: 'success',
-    products: products.length,
+    results: products.length,
     data: {
       products,
     },
@@ -48,6 +48,28 @@ exports.getProductById = catchAsync(async (req, res, next) => {
     data: {
       product,
       availableColors: colors,
+    },
+  });
+});
+
+exports.updateProductById = catchAsync(async (req, res, next) => {
+  // 1) get the ID
+  const { id } = req.params;
+
+  // 2) update the product
+  const product = await Product.findByIdAndUpdate(id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  // 3) if the product does not exist
+  if (!product) {
+    return next(new AppError('No product found with that ID', 404));
+  }
+  // 4) send the updated product
+  res.status(200).json({
+    status: 'success',
+    data: {
+      product,
     },
   });
 });

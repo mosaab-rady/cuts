@@ -62,18 +62,8 @@ const productSchema = new mongoose.Schema({
       default: false,
     },
   },
-  sizeAndFit: [
-    {
-      type: String,
-      required: [true, 'A product must have size and fit information'],
-    },
-  ],
-  materialAndCare: [
-    {
-      type: String,
-      required: [true, 'A product must have material and care information'],
-    },
-  ],
+  sizeAndFit: [String],
+  materialAndCare: [String],
   reason: String,
   price: {
     type: Number,
