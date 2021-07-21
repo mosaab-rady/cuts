@@ -8,9 +8,11 @@ router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 router.get('/logout', authController.logout);
 
+router.use(authController.protect);
+
 router
   .route('/')
-  .get(userController.getAllUsers)
+  .get(authController.restrictTo('admin'), userController.getAllUsers)
   .post(userController.createNewUser);
 
 router

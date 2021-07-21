@@ -60,11 +60,60 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.logout = (req, res, next) => {
   res.cookie('jwt_server', 'loggedout', {
-    expires: new Date(Date.now() + 10000),
+    expires: new Date(Date.now()),
     httpOnly: true,
   });
   res.status(200).json({
     status: 'success',
-    data: 'logged out successfully',
+    data: 'logged out successfully.',
   });
 };
+
+exports.protect = catchAsync(async (req, res, next) => {
+  // 1) get the cookie
+  const token = req.cookies.jwt_server;
+  // 2) if no cookie send error
+  if (!token)
+    return next(
+      new AppError('You are not logged in! please log in to get access.', 401)
+    );
+  // 3) verify the cookie
+  const decoded = jwt.verify(
+    token,
+    process.env.JWT_SECRET,
+    function (err, decoded) {
+      if (err) {
+        return next(
+          new AppError('something went wrog!! Please log in again.', 401)
+        );
+      }
+      return decoded;
+    }
+  );
+  // 4) check for the user
+  const currentUser = await User.findById(decoded.id);
+  // 5) if no user send error
+  if (!currentUser)
+    return next(
+      new AppError(
+        'The user belonging to this token does no longer exist.',
+        401
+      )
+    );
+  // 6) put the user in the req
+  req.user = currentUser;
+  // 7) allow access
+  next();
+});
+
+exports.restrictTo =
+  (...roles) =>
+  (req, res, next) => {
+    // roles [user,admin]
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError('You do not have permission to perform this action.', 403)
+      );
+    }
+    next();
+  };

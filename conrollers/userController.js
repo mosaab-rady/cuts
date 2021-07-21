@@ -34,7 +34,7 @@ exports.getUserById = catchAsync(async (req, res, next) => {
   const user = await User.findById(id);
   // 3) if the user does not exist send error
   if (!user) {
-    return next(new AppError('No document found with that ID', 404));
+    return next(new AppError('No document found with that ID.', 404));
   }
   // 4) send response
   res.status(200).json({
@@ -54,7 +54,7 @@ exports.updateUserById = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
   // 3) if the user does not exist send error
-  if (!user) return next(new AppError('No document found wwith that ID', 404));
+  if (!user) return next(new AppError('No document found wwith that ID.', 404));
   // 4) send response
   res.status(200).json({
     status: 'success',
@@ -70,7 +70,7 @@ exports.deleteUserById = catchAsync(async (req, res, next) => {
   // 2) delete the user
   const user = await User.findByIdAndDelete(id);
   // 3) if user does nott exist send error
-  if (!user) return next(new AppError('No document found with that ID', 404));
+  if (!user) return next(new AppError('No document found with that ID.', 404));
   // 4) send response
   res.status(204).json({
     status: 'success',
