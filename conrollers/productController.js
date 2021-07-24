@@ -29,7 +29,7 @@ exports.getProductById = catchAsync(async (req, res, next) => {
   //  1) get the id
   const { id } = req.params;
   //  2) find the product
-  const product = await Product.findById(id);
+  const product = await Product.findById(id).populate('reviews');
 
   // 3) if no product send err
   if (!product) {
