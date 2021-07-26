@@ -8,6 +8,7 @@ const globalErrorHandler = require('./conrollers/errorController');
 const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
+const shoppingRoutes = require('./routes/shoppingRoutes');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
+app.use('/api/v1/shopping', shoppingRoutes);
 
 // handling error
 app.use(globalErrorHandler);
