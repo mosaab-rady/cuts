@@ -1,6 +1,115 @@
 const Product = require('../models/productModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const multer = require('multer');
+const { GridFsStorage } = require('multer-gridfs-storage');
+const sharp = require('sharp');
+const { Readable } = require('stream');
+
+// const storage = new GridFsStorage({
+//   url: process.env.DATABASE,
+//   file: (req, file) => {
+//     return {
+//       bucketName: 'photos',
+//     };
+//   },
+//   options: { useUnifiedTopology: true },
+// });
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('Not an image! Please upload only images.', 400), false);
+  }
+};
+
+const upload = multer({
+  fileFilter: multerFilter,
+});
+
+exports.uploadProductImages = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'imageDetail', maxCount: 1 },
+  { name: 'images', maxCount: 3 },
+]);
+
+exports.resizeProductImages = catchAsync(async (req, res, next) => {
+  if (!req.files) return next();
+
+  if (req.files.imageCover[0]) {
+    req.body.imageCover = `product_cover_${Date.now()}`;
+    const data = await sharp(req.files.imageCover[0].buffer)
+      .resize(1000, 1333)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toBuffer();
+
+    const fileStream = Readable.from(data);
+    await new GridFsStorage({
+      url: process.env.DATABASE,
+      file: (req, file) => {
+        return {
+          filename: req.body.imageCover,
+          bucketName: 'photos',
+        };
+      },
+      options: { useUnifiedTopology: true },
+    }).fromStream(fileStream, req, req.files.imageCover[0]);
+  }
+
+  if (req.files.imageDetail[0]) {
+    req.body.imageDetail = `product_detail_${Date.now()}`;
+    const data = await sharp(req.files.imageDetail[0].buffer)
+      .resize(1000, 1333)
+      .toFormat('jpeg')
+      .jpeg({ quality: 90 })
+      .toBuffer();
+
+    const fileStream = Readable.from(data);
+    await new GridFsStorage({
+      url: process.env.DATABASE,
+      file: (req, file) => {
+        return {
+          filename: req.body.imageDetail,
+          bucketName: 'photos',
+        };
+      },
+      options: { useUnifiedTopology: true },
+    }).fromStream(fileStream, req, req.files.imageDetail[0]);
+  }
+
+  if (req.files.images) {
+    req.body.images = [];
+    await Promise.all(
+      req.files.images.map(async (file, i) => {
+        const filename = `product_${Date.now()}_${i + 1}`;
+        req.body.images.push(filename);
+
+        const data = await sharp(file.buffer)
+          .resize(1000, 1333)
+          .toFormat('jpeg')
+          .jpeg({ quality: 90 })
+          .toBuffer();
+
+        const fileStream = Readable.from(data);
+
+        await new GridFsStorage({
+          url: process.env.DATABASE,
+          file: (req, file) => {
+            return {
+              filename,
+              bucketName: 'photos',
+            };
+          },
+          options: { useUnifiedTopology: true },
+        }).fromStream(fileStream, req, file);
+      })
+    );
+  }
+
+  next();
+});
 
 exports.getAllProducts = catchAsync(async (req, res, next) => {
   const products = await Product.find().select(
