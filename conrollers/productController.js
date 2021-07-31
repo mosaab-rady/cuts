@@ -6,15 +6,14 @@ const { GridFsStorage } = require('multer-gridfs-storage');
 const sharp = require('sharp');
 const { Readable } = require('stream');
 
-// const storage = new GridFsStorage({
-//   url: process.env.DATABASE,
-//   file: (req, file) => {
-//     return {
-//       bucketName: 'photos',
-//     };
-//   },
-//   options: { useUnifiedTopology: true },
-// });
+const storage = (filename) =>
+  new GridFsStorage({
+    url: process.env.DATABASE,
+    file: (req, file) => {
+      return { filename, bucketName: 'photos' };
+    },
+    options: { useUnifiedTopology: true },
+  });
 
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
@@ -46,16 +45,11 @@ exports.resizeProductImages = catchAsync(async (req, res, next) => {
       .toBuffer();
 
     const fileStream = Readable.from(data);
-    await new GridFsStorage({
-      url: process.env.DATABASE,
-      file: (req, file) => {
-        return {
-          filename: req.body.imageCover,
-          bucketName: 'photos',
-        };
-      },
-      options: { useUnifiedTopology: true },
-    }).fromStream(fileStream, req, req.files.imageCover[0]);
+    await storage(req.body.imageCover).fromStream(
+      fileStream,
+      req,
+      req.files.imageCover[0]
+    );
   }
 
   if (req.files.imageDetail[0]) {
@@ -67,16 +61,11 @@ exports.resizeProductImages = catchAsync(async (req, res, next) => {
       .toBuffer();
 
     const fileStream = Readable.from(data);
-    await new GridFsStorage({
-      url: process.env.DATABASE,
-      file: (req, file) => {
-        return {
-          filename: req.body.imageDetail,
-          bucketName: 'photos',
-        };
-      },
-      options: { useUnifiedTopology: true },
-    }).fromStream(fileStream, req, req.files.imageDetail[0]);
+    await storage(req.body.imageDetail).fromStream(
+      fileStream,
+      req,
+      req.files.imageDetail[0]
+    );
   }
 
   if (req.files.images) {
@@ -94,19 +83,12 @@ exports.resizeProductImages = catchAsync(async (req, res, next) => {
 
         const fileStream = Readable.from(data);
 
-        await new GridFsStorage({
-          url: process.env.DATABASE,
-          file: (req, file) => {
-            return {
-              filename,
-              bucketName: 'photos',
-            };
-          },
-          options: { useUnifiedTopology: true },
-        }).fromStream(fileStream, req, file);
+        await storage(filename).fromStream(fileStream, req, file);
       })
     );
   }
+
+  console.log(req.body);
 
   next();
 });

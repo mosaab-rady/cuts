@@ -8,6 +8,13 @@ const reviewRoutes = require('./reviewRoutes');
 router.use('/:productid/reviews', reviewRoutes);
 
 router
+  .route('/testPic')
+  .post(
+    productController.uploadProductImages,
+    productController.resizeProductImages
+  );
+
+router
   .route('/')
   .get(productController.getAllProducts)
   .post(productController.createProduct);
