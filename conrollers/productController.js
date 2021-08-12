@@ -36,7 +36,7 @@ exports.uploadProductImages = upload.fields([
 exports.resizeProductImages = catchAsync(async (req, res, next) => {
   if (!req.files) return next();
 
-  if (req.files.imageCover[0]) {
+  if (req.files.imageCover) {
     req.body.imageCover = `product_cover_${Date.now()}`;
     const data = await sharp(req.files.imageCover[0].buffer)
       .resize(1000, 1333)
@@ -52,7 +52,7 @@ exports.resizeProductImages = catchAsync(async (req, res, next) => {
     );
   }
 
-  if (req.files.imageDetail[0]) {
+  if (req.files.imageDetail) {
     req.body.imageDetail = `product_detail_${Date.now()}`;
     const data = await sharp(req.files.imageDetail[0].buffer)
       .resize(1000, 1333)
@@ -87,8 +87,6 @@ exports.resizeProductImages = catchAsync(async (req, res, next) => {
       })
     );
   }
-
-  console.log(req.body);
 
   next();
 });

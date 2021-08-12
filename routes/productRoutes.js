@@ -4,25 +4,42 @@ const router = express.Router();
 
 const productController = require('../conrollers/productController');
 const reviewRoutes = require('./reviewRoutes');
+const authController = require('../conrollers/authController');
 
 router.use('/:productid/reviews', reviewRoutes);
 
-router
-  .route('/testPic')
-  .post(
-    productController.uploadProductImages,
-    productController.resizeProductImages
-  );
+// router
+//   .route('/testPic')
+//   .post(
+//     productController.uploadProductImages,
+//     productController.resizeProductImages
+//   );
 
 router
   .route('/')
   .get(productController.getAllProducts)
-  .post(productController.createProduct);
+  .post(
+    authController.protect,
+    authController.restrictTo('admin'),
+    productController.uploadProductImages,
+    productController.resizeProductImages,
+    productController.createProduct
+  );
 
 router
   .route('/:id')
   .get(productController.getProductById)
-  .patch(productController.updateProductById)
-  .delete(productController.deleteProduct);
+  .patch(
+    authController.protect,
+    authController.restrictTo('admin'),
+    productController.uploadProductImages,
+    productController.resizeProductImages,
+    productController.updateProductById
+  )
+  .delete(
+    authController.protect,
+    authController.restrictTo('admin'),
+    productController.deleteProduct
+  );
 
 module.exports = router;
