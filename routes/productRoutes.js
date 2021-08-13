@@ -1,6 +1,6 @@
 // create router
 const express = require('express');
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 const productController = require('../conrollers/productController');
 const reviewRoutes = require('./reviewRoutes');
@@ -21,6 +21,7 @@ router
   .post(
     authController.protect,
     authController.restrictTo('admin'),
+    productController.getCollectionId,
     productController.uploadProductImages,
     productController.resizeProductImages,
     productController.createProduct

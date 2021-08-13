@@ -6,6 +6,11 @@ const { GridFsStorage } = require('multer-gridfs-storage');
 const sharp = require('sharp');
 const { Readable } = require('stream');
 
+exports.getCollectionId = (req, res, next) => {
+  if (req.params.collectionId) req.body.collectionId = req.params.collectionId;
+  next();
+};
+
 const storage = (filename) =>
   new GridFsStorage({
     url: process.env.DATABASE,
