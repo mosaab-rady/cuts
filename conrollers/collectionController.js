@@ -35,9 +35,9 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
 
   req.body.image = `collection_image_${Date.now()}`;
   const data = await sharp(req.file.buffer)
-    .resize(1000, 1333)
+    .resize(1440, 550)
     .toFormat('jpeg')
-    .jpeg({ quality: 90 })
+    .jpeg({ quality: 100 })
     .toBuffer();
 
   const fileStream = Readable.from(data);
@@ -80,6 +80,20 @@ exports.getCollectionById = catchAsync(async (req, res, next) => {
   if (!collection)
     return next(new AppError('No document found with that ID.', 404));
   // 4) send res
+  res.status(200).json({
+    status: 'success',
+    data: {
+      collection,
+    },
+  });
+});
+
+exports.getDisplayedCollection = catchAsync(async (req, res, next) => {
+  // 1) find the collection
+  const collection = await Collection.findOne({ display: true });
+  // 2) if no collection send err
+  if (!collection) return next(new AppError('No document found.', 404));
+  // 3) sen res.
   res.status(200).json({
     status: 'success',
     data: {

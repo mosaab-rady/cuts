@@ -36,7 +36,7 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
 app.use('/api/v1/shopping', shoppingRoutes);
 app.use('/api/v1/collections', collectionRoutes);
-app.use('api/v1/images/:filename', fileController.getImage);
+app.get('/api/v1/images/:filename', fileController.getImage);
 
 // handling error
 app.use(globalErrorHandler);

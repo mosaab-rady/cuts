@@ -13,6 +13,10 @@ const collectionSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
+    display: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: { virtuals: true },

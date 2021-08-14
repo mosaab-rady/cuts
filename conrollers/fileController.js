@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const AppError = require('../utils/AppError');
+const catchAsync = require('../utils/catchAsync');
 const url = process.env.DATABASE;
 
 const connect = mongoose.createConnection(url, {
@@ -13,25 +15,26 @@ connect.once('open', () => {
   });
 });
 
-exports.getImage = (req, res, next) => {
+exports.getImage = catchAsync(async (req, res, next) => {
   let fileName;
   if (req.params.filename) {
     fileName = req.params.filename;
-    const findImgs = async () => {
-      await new Promise((resolve, reject) => {
-        gfs.find({ filename: fileName }).toArray((err, files) => {
-          if (!files[0] || files.length === 0) {
-            return reject(
-              res.status(200).json({
-                status: 'success',
-                message: 'no files available',
-              })
-            );
-          }
-          resolve(gfs.openDownloadStreamByName(fileName).pipe(res));
-        });
-      });
-    };
-    findImgs();
+
+    await gfs.find({ filename: fileName }).toArray((err, files) => {
+      if (!files[0] || files.length === 0) {
+        return next(new AppError('no files', 404));
+      }
+      gfs.openDownloadStreamByName(fileName).pipe(res);
+    });
+
+    //
+    //   const findImgs = async () => {
+    //     new Promise((resolve, reject) => {
+    //       gfs.find({ filename: fileName }).toArray((err, files) => {
+    //         resolve(gfs.openDownloadStreamByName(fileName).pipe(res));
+    //       });
+    //     });
+    //   };
+    //   findImgs();
   }
-};
+});
