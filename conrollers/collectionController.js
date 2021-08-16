@@ -28,20 +28,62 @@ const upload = multer({
   fileFilter: multerFilter,
 });
 
-exports.uploadImage = upload.single('image');
+exports.uploadImage = upload.fields([
+  { name: 'imageCover', maxCount: 1 },
+  { name: 'image', maxCount: 1 },
+  { name: 'imageHero', maxCount: 1 },
+]);
 
 exports.resizeImage = catchAsync(async (req, res, next) => {
-  if (!req.file) return next();
+  if (!req.files) return next();
 
-  req.body.image = `collection_image_${Date.now()}`;
-  const data = await sharp(req.file.buffer)
-    .resize(1440, 550)
-    .toFormat('jpeg')
-    .jpeg({ quality: 100 })
-    .toBuffer();
+  if (req.files.imageCover) {
+    req.body.imageCover = `collection_imageCover_${Date.now()}`;
+    const data = await sharp(req.files.imageCover[0].buffer)
+      .resize(1500, 300)
+      .toFormat('jpeg')
+      .jpeg({ quality: 100 })
+      .toBuffer();
 
-  const fileStream = Readable.from(data);
-  await storage(req.body.image).fromStream(fileStream, req, req.file);
+    const fileStream = Readable.from(data);
+    await storage(req.body.imageCover).fromStream(
+      fileStream,
+      req,
+      req.files.imageCover[0]
+    );
+  }
+
+  if (req.files.imageHero) {
+    req.body.imageHero = `collection_imageHero_${Date.now()}`;
+    const data = await sharp(req.files.imageHero[0].buffer)
+      .resize(1500, 600)
+      .toFormat('jpeg')
+      .jpeg({ quality: 100 })
+      .toBuffer();
+
+    const fileStream = Readable.from(data);
+    await storage(req.body.imageHero).fromStream(
+      fileStream,
+      req,
+      req.files.imageHero[0]
+    );
+  }
+
+  if (req.files.image) {
+    req.body.image = `collection_image_${Date.now()}`;
+    const data = await sharp(req.files.image[0].buffer)
+      .resize(1500, 1500)
+      .toFormat('jpeg')
+      .jpeg({ quality: 100 })
+      .toBuffer();
+
+    const fileStream = Readable.from(data);
+    await storage(req.body.image).fromStream(
+      fileStream,
+      req,
+      req.files.image[0]
+    );
+  }
 
   next();
 });
@@ -89,11 +131,13 @@ exports.getCollectionById = catchAsync(async (req, res, next) => {
 });
 
 exports.getDisplayedCollection = catchAsync(async (req, res, next) => {
-  // 1) find the collection
-  const collection = await Collection.findOne({ display: true });
-  // 2) if no collection send err
-  if (!collection) return next(new AppError('No document found.', 404));
-  // 3) sen res.
+  // 1) get the collection mode
+  const { mode } = req.params;
+  // 2) find the collection
+  const collection = await Collection.findOne({ mode });
+  // 3) if no collection continue
+  if (!collection) return next();
+  // 4) send res
   res.status(200).json({
     status: 'success',
     data: {

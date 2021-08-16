@@ -20,7 +20,7 @@ router
     collectionController.createNewCollection
   );
 
-router.route('/displayed').get(collectionController.getDisplayedCollection);
+router.route('/display/:mode').get(collectionController.getDisplayedCollection);
 
 router
   .route('/:id')

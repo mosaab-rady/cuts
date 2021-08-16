@@ -7,15 +7,16 @@ const collectionSchema = new mongoose.Schema(
       required: [true, 'A collection must have a name'],
       unique: true,
     },
+    imageHero: String,
+    imageCover: String,
     image: String,
-    summary: String,
     createdAt: {
       type: Date,
       default: Date.now(),
     },
-    display: {
-      type: Boolean,
-      default: false,
+    mode: {
+      type: String,
+      enum: ['main', 'first', 'second', 'third'],
     },
   },
   {
