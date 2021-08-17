@@ -132,11 +132,13 @@ exports.getCollectionById = catchAsync(async (req, res, next) => {
 
 exports.getDisplayedCollection = catchAsync(async (req, res, next) => {
   // 1) get the collection mode
-  const { mode } = req.params;
+  console.log(req.query);
+  if (!req.query) return next(new AppError('Please use query values.', 400));
+  // const { mode } = req.params;
   // 2) find the collection
-  const collection = await Collection.findOne({ mode });
+  const collection = await Collection.findOne(req.query);
   // 3) if no collection continue
-  if (!collection) return next();
+  if (!collection) return next(new AppError('No document found.', 404));
   // 4) send res
   res.status(200).json({
     status: 'success',
