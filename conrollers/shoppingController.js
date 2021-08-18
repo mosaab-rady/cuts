@@ -2,7 +2,16 @@ const Shopping = require('../models/shoppingModel');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getAllShopping = catchAsync(async (req, res, next) => {
-  res.send('all shopping');
+  // 1) finds all shopping
+  const shoppings = await Shopping.find();
+  // 2) send res
+  res.status(200).json({
+    status: 'success',
+    results: shoppings.length,
+    data: {
+      shoppings,
+    },
+  });
 });
 
 exports.createNewShopping = catchAsync(async (req, res, next) => {
