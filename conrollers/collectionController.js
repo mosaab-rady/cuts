@@ -131,13 +131,44 @@ exports.getCollectionById = catchAsync(async (req, res, next) => {
 });
 
 exports.getDisplayedCollection = catchAsync(async (req, res, next) => {
+  // const query = req.query;
+  // let filter = { ...query };
   // 1) get the collection mode
-  if (!req.query) return next(new AppError('Please use query values.', 400));
+  if (!req.query.mode && !req.query.name)
+    return next(new AppError('Please use query values.', 400));
   // const { mode } = req.params;
   // 2) find the collection
   const collection = await Collection.find(req.query);
   // 3) if no collection continue
   if (!collection) return next(new AppError('No document found.', 404));
+  // 4) send res
+  res.status(200).json({
+    status: 'success',
+    data: {
+      collection,
+    },
+  });
+});
+
+exports.getCollectionProducts = catchAsync(async (req, res, next) => {
+  let limit;
+  if (req.query.limit) {
+    limit = Number(req.query.limit);
+    req.query.limit = undefined;
+  }
+  // 1) get the id
+  if (!req.query.mode && !req.query.name)
+    return next(new AppError('Please use query values.', 400));
+  // 2) find the collection and populate products
+  const collection = await Collection.findOne(req.query).populate({
+    path: 'products',
+    select:
+      'collar color name imageCover imageDetail model price sale type cut',
+    options: { limit: limit },
+  });
+  // 3) if no cllection send error
+  if (!collection)
+    return next(new AppError('No document found with that ID.', 404));
   // 4) send res
   res.status(200).json({
     status: 'success',

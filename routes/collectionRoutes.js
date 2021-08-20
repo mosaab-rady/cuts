@@ -21,6 +21,9 @@ router
   );
 
 router.route('/display').get(collectionController.getDisplayedCollection);
+router
+  .route('/display/products')
+  .get(collectionController.getCollectionProducts);
 
 router
   .route('/:id')
