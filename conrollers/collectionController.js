@@ -163,7 +163,7 @@ exports.getCollectionProducts = catchAsync(async (req, res, next) => {
   const collection = await Collection.findOne(req.query).populate({
     path: 'products',
     select:
-      'collar color name imageCover imageDetail model price sale type cut',
+      'collar color name imageCover imageDetail model price sale type cut size',
     options: { limit: limit },
   });
   // 3) if no cllection send error
