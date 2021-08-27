@@ -11,8 +11,7 @@ const userRoutes = require('./routes/userRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const shoppingRoutes = require('./routes/shoppingRoutes');
 const collectionRoutes = require('./routes/collectionRoutes');
-const fileController = require('./conrollers/fileController');
-
+const fileRoutes = require('./routes/imageRoutes');
 const app = express();
 
 if (process.env.NODE_ENV === 'development') {
@@ -36,7 +35,7 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
 app.use('/api/v1/shopping', shoppingRoutes);
 app.use('/api/v1/collections', collectionRoutes);
-app.get('/api/v1/images/:filename', fileController.getImage);
+app.use('/api/v1/images', fileRoutes);
 
 // handling error
 app.use(globalErrorHandler);

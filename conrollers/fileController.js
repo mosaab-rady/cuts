@@ -26,15 +26,5 @@ exports.getImage = catchAsync(async (req, res, next) => {
       }
       gfs.openDownloadStreamByName(fileName).pipe(res);
     });
-
-    //
-    //   const findImgs = async () => {
-    //     new Promise((resolve, reject) => {
-    //       gfs.find({ filename: fileName }).toArray((err, files) => {
-    //         resolve(gfs.openDownloadStreamByName(fileName).pipe(res));
-    //       });
-    //     });
-    //   };
-    //   findImgs();
   }
 });
