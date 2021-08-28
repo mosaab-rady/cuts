@@ -97,7 +97,7 @@ exports.resizeProductImages = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllProducts = catchAsync(async (req, res, next) => {
-  const products = await Product.find().select(
+  const products = await Product.find(req.query).select(
     'name model type imageCover imageDetail size price sale color cut  collar collectionId'
   );
   res.status(200).json({

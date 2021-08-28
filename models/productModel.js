@@ -19,7 +19,14 @@ const productSchema = new mongoose.Schema(
     type: {
       type: String,
       required: [true, 'A product must have a type'],
-      trim: true,
+      enum: [
+        't-shirt',
+        'polo',
+        'long sleeves',
+        'sweet shirt',
+        'hooded shirt',
+        'hat',
+      ],
     },
     fabric: String,
     fabricFeatures: {
@@ -79,8 +86,14 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A product must have a summary'],
     },
-    cut: String,
-    collar: String,
+    cut: {
+      type: String,
+      enum: ['classic', 'elongated', 'split'],
+    },
+    collar: {
+      type: String,
+      enum: ['crew', 'hoodie', 'henley', 'hooded', 'v-neck', 'polo'],
+    },
     status: String,
     color: {
       type: String,
