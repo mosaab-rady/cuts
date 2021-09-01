@@ -16,6 +16,16 @@ connect.once('open', () => {
   });
 });
 
+exports.getAllDocumentImages = catchAsync(async (req, res, next) => {
+  const documents = await Image.find();
+  res.status(200).json({
+    status: 'success',
+    data: {
+      documents,
+    },
+  });
+});
+
 exports.createImage = catchAsync(async (req, res, next) => {
   // 1) create image
   const image = await Image.create(req.body);

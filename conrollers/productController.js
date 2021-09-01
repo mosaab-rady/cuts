@@ -5,6 +5,7 @@ const multer = require('multer');
 const { GridFsStorage } = require('multer-gridfs-storage');
 const sharp = require('sharp');
 const { Readable } = require('stream');
+const Shopping = require('../models/shoppingModel');
 
 exports.getCollectionId = (req, res, next) => {
   if (req.params.collectionId) req.body.collectionId = req.params.collectionId;
@@ -96,9 +97,63 @@ exports.resizeProductImages = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.getNewReleases = catchAsync(async (req, res, next) => {
+  const products = await Product.find({
+    createdAt: {
+      $gte: new Date(new Date().setDate(new Date().getDate() - 60)),
+    },
+  }).select(
+    'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt'
+  );
+  res.status(200).json({
+    status: 'success',
+    results: products.length,
+    data: {
+      products,
+    },
+  });
+});
+
+exports.getBestSellers = catchAsync(async (req, res, next) => {
+  let limit = '';
+  if (req.query.limit) limit = req.query.limit;
+
+  const aggregate = await Shopping.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: new Date(new Date().setDate(new Date().getDate() - 30)),
+        },
+      },
+    },
+    { $group: { _id: '$product', count: { $sum: 1 } } },
+    { $match: { count: { $gt: 10 } } },
+  ]);
+
+  const productIds = aggregate.map((item) => {
+    return item._id;
+  });
+
+  const products = await Product.find({ _id: { $in: productIds } })
+    .select(
+      'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt'
+    )
+    .limit(Number(limit));
+
+  res.status(200).json({
+    status: 'success',
+    results: products.length,
+    data: {
+      products,
+    },
+  });
+});
+
 exports.getAllProducts = catchAsync(async (req, res, next) => {
-  const products = await Product.find(req.query).select(
-    'name model type imageCover imageDetail size price sale color cut  collar collectionId'
+  let filter;
+  filter = { ...req.query };
+  const products = await Product.find(filter).select(
+    'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt'
   );
   res.status(200).json({
     status: 'success',

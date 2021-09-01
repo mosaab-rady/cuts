@@ -15,6 +15,9 @@ router.use('/:productid/reviews', reviewRoutes);
 //     productController.resizeProductImages
 //   );
 
+router.get('/new-releases', productController.getNewReleases);
+router.get('/best-sellers', productController.getBestSellers);
+
 router
   .route('/')
   .get(productController.getAllProducts)

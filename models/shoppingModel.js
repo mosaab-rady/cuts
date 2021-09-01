@@ -26,6 +26,8 @@ const shoppingSchema = new mongoose.Schema({
   },
 });
 
+shoppingSchema.index({ product: 1 });
+
 const Shopping = mongoose.model('Shopping', shoppingSchema);
 
 module.exports = Shopping;

@@ -142,6 +142,10 @@ const productSchema = new mongoose.Schema(
       set: (val) => Math.round(val * 10) / 10,
     },
     slug: String,
+    createdAt: {
+      type: Date,
+      default: Date.now(),
+    },
   },
   {
     toJSON: { virtuals: true },

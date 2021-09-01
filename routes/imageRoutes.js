@@ -11,6 +11,7 @@ router
 
 router
   .route('/image')
+  .get(fileController.getAllDocumentImages)
   .post(
     collectionController.uploadImage,
     collectionController.resizeImage,
