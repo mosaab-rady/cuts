@@ -103,7 +103,7 @@ exports.getNewReleases = catchAsync(async (req, res, next) => {
       $gte: new Date(new Date().setDate(new Date().getDate() - 60)),
     },
   }).select(
-    'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt'
+    'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt status'
   );
   res.status(200).json({
     status: 'success',
@@ -136,7 +136,7 @@ exports.getBestSellers = catchAsync(async (req, res, next) => {
 
   const products = await Product.find({ _id: { $in: productIds } })
     .select(
-      'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt'
+      'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt status'
     )
     .limit(Number(limit));
 
@@ -153,7 +153,7 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
   let filter;
   filter = { ...req.query };
   const products = await Product.find(filter).select(
-    'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt'
+    'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt status'
   );
   res.status(200).json({
     status: 'success',
@@ -178,7 +178,7 @@ exports.getProductById = catchAsync(async (req, res, next) => {
   //  1) get the id
   const { id } = req.params;
   //  2) find the product
-  const product = await Product.findById(id).populate('reviews');
+  const product = await Product.findById(id);
 
   // 3) if no product send err
   if (!product) {

@@ -94,7 +94,6 @@ const productSchema = new mongoose.Schema(
       type: String,
       enum: ['crew', 'hoodie', 'henley', 'hooded', 'v-neck', 'polo'],
     },
-    status: String,
     color: {
       type: String,
       required: [true, 'A product must have color'],
@@ -153,10 +152,12 @@ const productSchema = new mongoose.Schema(
   }
 );
 
-productSchema.virtual('reviews', {
-  ref: 'Review',
-  localField: '_id',
-  foreignField: 'product',
+productSchema.virtual('status').get(function () {
+  if (
+    this.createdAt >= new Date(new Date().setDate(new Date().getDate() - 60))
+  ) {
+    return 'new';
+  } else return 'restocked';
 });
 
 // add slug to document before save to DB
