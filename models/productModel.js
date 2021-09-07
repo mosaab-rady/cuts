@@ -98,6 +98,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A product must have color'],
     },
+    colorHex: {
+      type: String,
+      required: [true, 'A product must have a hex color.'],
+    },
     size: {
       small: {
         type: Number,

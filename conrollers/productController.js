@@ -136,7 +136,7 @@ exports.getBestSellers = catchAsync(async (req, res, next) => {
 
   const products = await Product.find({ _id: { $in: productIds } })
     .select(
-      'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt status'
+      'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex'
     )
     .limit(Number(limit));
 
@@ -153,7 +153,7 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
   let filter;
   filter = { ...req.query };
   const products = await Product.find(filter).select(
-    'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt status'
+    'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex'
   );
   res.status(200).json({
     status: 'success',
@@ -189,7 +189,7 @@ exports.getProductById = catchAsync(async (req, res, next) => {
   const colors = await Product.find({
     model: product.model,
     fabric: product.fabric,
-  }).select('color');
+  }).select('color createdAt colorHex ');
 
   // 4) send the res
   res.status(200).json({
