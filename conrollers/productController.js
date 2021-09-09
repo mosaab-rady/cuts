@@ -174,6 +174,49 @@ exports.createProduct = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getSingleProduct = catchAsync(async (req, res, next) => {
+  //  1) get the query
+  let filter = {};
+  if (req.query.model) filter.model = req.query.model;
+  if (req.query.fabric) filter.fabric = req.query.fabric;
+  if (req.query.cut) filter.cut = req.query.cut;
+  if (req.query.collar) filter.collar = req.query.collar;
+  //  2) find the product
+  const product = await Product.findOne(filter);
+
+  // 3) if no product send err
+  if (!product) {
+    return next(new AppError('No product found with that ID', 404));
+  }
+
+  // find all model colors
+  const colors = await Product.find({
+    model: product.model,
+    fabric: product.fabric,
+  }).select('color createdAt colorHex ');
+
+  const fabrics = await Product.aggregate([
+    {
+      $match: {
+        model: product.model,
+      },
+    },
+    {
+      $group: { _id: '$fabric' },
+    },
+  ]);
+
+  // 4) send the res
+  res.status(200).json({
+    status: 'success',
+    data: {
+      product,
+      availableColors: colors,
+      fabrics,
+    },
+  });
+});
+
 exports.getProductById = catchAsync(async (req, res, next) => {
   //  1) get the id
   const { id } = req.params;
@@ -191,12 +234,24 @@ exports.getProductById = catchAsync(async (req, res, next) => {
     fabric: product.fabric,
   }).select('color createdAt colorHex ');
 
+  const fabrics = await Product.aggregate([
+    {
+      $match: {
+        model: product.model,
+      },
+    },
+    {
+      $group: { _id: '$fabric' },
+    },
+  ]);
+
   // 4) send the res
   res.status(200).json({
     status: 'success',
     data: {
       product,
       availableColors: colors,
+      fabrics,
     },
   });
 });

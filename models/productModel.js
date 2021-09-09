@@ -14,6 +14,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A product must have a model'],
       trim: true,
+      lowercase: true,
     },
     collectionId: mongoose.Schema.Types.ObjectId,
     type: {
@@ -155,6 +156,8 @@ const productSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+productSchema.index({ fabric: 1 });
 
 productSchema.virtual('status').get(function () {
   if (

@@ -17,6 +17,7 @@ router.use('/:productid/reviews', reviewRoutes);
 
 router.get('/new-releases', productController.getNewReleases);
 router.get('/best-sellers', productController.getBestSellers);
+router.get('/product', productController.getSingleProduct);
 
 router
   .route('/')
