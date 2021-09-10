@@ -90,10 +90,12 @@ const productSchema = new mongoose.Schema(
     cut: {
       type: String,
       enum: ['classic', 'elongated', 'split'],
+      required: [true, 'Aproduct must have a cut.'],
     },
     collar: {
       type: String,
       enum: ['crew', 'hoodie', 'henley', 'hooded', 'v-neck', 'polo'],
+      required: [true, 'A product must have a collar.'],
     },
     color: {
       type: String,
