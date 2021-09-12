@@ -10,12 +10,6 @@ const productSchema = new mongoose.Schema(
       maxLength: [40, 'A product name must be less or eqaul 40 characters'],
       minLength: [10, 'A product name must be more or eqaul 10 characters'],
     },
-    model: {
-      type: String,
-      required: [true, 'A product must have a model'],
-      trim: true,
-      lowercase: true,
-    },
     collectionId: mongoose.Schema.Types.ObjectId,
     type: {
       type: String,
@@ -160,6 +154,9 @@ const productSchema = new mongoose.Schema(
 );
 
 productSchema.index({ fabric: 1 });
+productSchema.index({ type: 1 });
+productSchema.index({ cut: 1 });
+productSchema.index({ collar: 1 });
 
 productSchema.virtual('status').get(function () {
   if (

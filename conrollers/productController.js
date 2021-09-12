@@ -103,7 +103,7 @@ exports.getNewReleases = catchAsync(async (req, res, next) => {
       $gte: new Date(new Date().setDate(new Date().getDate() - 60)),
     },
   }).select(
-    'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt status'
+    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status'
   );
   res.status(200).json({
     status: 'success',
@@ -136,7 +136,7 @@ exports.getBestSellers = catchAsync(async (req, res, next) => {
 
   const products = await Product.find({ _id: { $in: productIds } })
     .select(
-      'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex'
+      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex'
     )
     .limit(Number(limit));
 
@@ -153,7 +153,7 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
   let filter;
   filter = { ...req.query };
   const products = await Product.find(filter).select(
-    'name model type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex'
+    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex'
   );
   res.status(200).json({
     status: 'success',
@@ -177,7 +177,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 exports.getSingleProduct = catchAsync(async (req, res, next) => {
   //  1) get the query
   let filter = {};
-  if (req.query.model) filter.model = req.query.model;
+  if (req.query.type) filter.type = req.query.type;
   if (req.query.fabric) filter.fabric = req.query.fabric;
   if (req.query.cut) filter.cut = req.query.cut;
   if (req.query.collar) filter.collar = req.query.collar;
@@ -191,14 +191,18 @@ exports.getSingleProduct = catchAsync(async (req, res, next) => {
 
   // find all model colors
   const colors = await Product.find({
-    model: product.model,
+    type: product.type,
+    cut: product.cut,
+    collar: product.collar,
     fabric: product.fabric,
   }).select('color createdAt colorHex ');
 
   const fabrics = await Product.aggregate([
     {
       $match: {
-        model: product.model,
+        type: product.type,
+        cut: product.cut,
+        collar: product.collar,
       },
     },
     {
@@ -230,14 +234,18 @@ exports.getProductById = catchAsync(async (req, res, next) => {
 
   // find all model colors
   const colors = await Product.find({
-    model: product.model,
+    type: product.type,
+    cut: product.cut,
+    collar: product.collar,
     fabric: product.fabric,
   }).select('color createdAt colorHex ');
 
   const fabrics = await Product.aggregate([
     {
       $match: {
-        model: product.model,
+        type: product.type,
+        cut: product.cut,
+        collar: product.collar,
       },
     },
     {
