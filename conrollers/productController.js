@@ -103,7 +103,7 @@ exports.getNewReleases = catchAsync(async (req, res, next) => {
       $gte: new Date(new Date().setDate(new Date().getDate() - 60)),
     },
   }).select(
-    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status'
+    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status  fabric'
   );
   res.status(200).json({
     status: 'success',
@@ -136,7 +136,7 @@ exports.getBestSellers = catchAsync(async (req, res, next) => {
 
   const products = await Product.find({ _id: { $in: productIds } })
     .select(
-      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex'
+      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
     )
     .limit(Number(limit));
 
@@ -153,7 +153,7 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
   let filter;
   filter = { ...req.query };
   const products = await Product.find(filter).select(
-    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex'
+    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
   );
   res.status(200).json({
     status: 'success',
@@ -177,10 +177,12 @@ exports.createProduct = catchAsync(async (req, res, next) => {
 exports.getSingleProduct = catchAsync(async (req, res, next) => {
   //  1) get the query
   let filter = {};
+  if (req.params.slug) filter.slug = req.params.slug;
   if (req.query.type) filter.type = req.query.type;
   if (req.query.fabric) filter.fabric = req.query.fabric;
   if (req.query.cut) filter.cut = req.query.cut;
   if (req.query.collar) filter.collar = req.query.collar;
+  if (req.query.color) filter.color = req.query.color;
   //  2) find the product
   const product = await Product.findOne(filter);
 

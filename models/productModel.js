@@ -17,9 +17,9 @@ const productSchema = new mongoose.Schema(
       enum: [
         't-shirt',
         'polo',
-        'long sleeves',
-        'sweet shirt',
-        'hooded shirt',
+        'long-sleeve',
+        'sweet-shirt',
+        'hooded-shirt',
         'hat',
       ],
     },
