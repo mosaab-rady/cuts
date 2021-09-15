@@ -23,7 +23,10 @@ const productSchema = new mongoose.Schema(
         'hat',
       ],
     },
-    fabric: String,
+    fabric: {
+      type: String,
+      required: [true, 'A product must have a fabric.'],
+    },
     fabricFeatures: {
       stretch: {
         type: Boolean,
@@ -157,6 +160,7 @@ productSchema.index({ fabric: 1 });
 productSchema.index({ type: 1 });
 productSchema.index({ cut: 1 });
 productSchema.index({ collar: 1 });
+productSchema.index({ slug: 1 });
 
 productSchema.virtual('status').get(function () {
   if (

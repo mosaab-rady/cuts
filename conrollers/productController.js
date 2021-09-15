@@ -188,7 +188,7 @@ exports.getSingleProduct = catchAsync(async (req, res, next) => {
 
   // 3) if no product send err
   if (!product) {
-    return next(new AppError('No product found with that ID', 404));
+    return next(new AppError('No product found.', 404));
   }
 
   // find all model colors

@@ -12,6 +12,21 @@ const productRoutes = require('./productRoutes');
 router.use('/:collectionId/product', productRoutes);
 
 router
+  .route('/collections/best-sellers')
+  .get(collectionController.getBestSellersCollection);
+
+router
+  .route('/collections/new-releases')
+  .get(collectionController.getNewReleasesCollection);
+
+router
+  .route('/collections/:slug')
+  .get(
+    collectionController.getCollectionWithProducts,
+    collectionController.getProductAsCollection
+  );
+
+router
   .route('/')
   .get(collectionController.grtAllCollections)
   .post(
