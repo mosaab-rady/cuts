@@ -35,6 +35,7 @@ exports.uploadImage = upload.fields([
   { name: 'imageCover', maxCount: 1 },
   { name: 'image', maxCount: 1 },
   { name: 'imageHero', maxCount: 1 },
+  { name: 'imageDetail', maxCount: 1 },
 ]);
 
 exports.resizeImage = catchAsync(async (req, res, next) => {
@@ -85,6 +86,22 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
       fileStream,
       req,
       req.files.image[0]
+    );
+  }
+
+  if (req.files.imageDetail) {
+    req.body.imageDetail = `collection_imageDetail_${Date.now()}`;
+    const data = await sharp(req.files.imageDetail[0].buffer)
+      .resize(1000, 1200)
+      .toFormat('jpeg')
+      .jpeg({ quality: 100 })
+      .toBuffer();
+
+    const fileStream = Readable.from(data);
+    await storage(req.body.imageDetail).fromStream(
+      fileStream,
+      req,
+      req.files.imageDetail[0]
     );
   }
 
@@ -179,8 +196,6 @@ exports.getCollectionWithProducts = catchAsync(async (req, res, next) => {
   } else if (req.params.slug === 'elongated') {
     req.filter = { cut: 'elongated' };
     return next();
-  } else {
-    next();
   }
   // 1) get the name of the collection
   const slug = req.params.slug;

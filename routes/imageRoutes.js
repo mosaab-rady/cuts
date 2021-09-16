@@ -6,7 +6,7 @@ const fileController = require('../conrollers/fileController');
 const collectionController = require('../conrollers/collectionController');
 
 router
-  .route('/image/:name/:image')
+  .route('/image/:slug/:image')
   .get(fileController.getDocumentImage, fileController.getImage);
 
 router

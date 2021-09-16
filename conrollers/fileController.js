@@ -59,9 +59,9 @@ exports.updateImage = catchAsync(async (req, res, next) => {
 
 exports.getDocumentImage = catchAsync(async (req, res, next) => {
   // 1) get the name
-  const { name } = req.params;
+  const { slug } = req.params;
   // 2) find document
-  const document = await Image.findOne({ name });
+  const document = await Image.findOne({ slug });
   // 3) if no document send err
   if (!document) return next(new AppError('No document found.', 404));
   // 4) get the image file name
@@ -70,6 +70,8 @@ exports.getDocumentImage = catchAsync(async (req, res, next) => {
     req.params.filename = document.imageCover;
   if (req.params.image === 'imageHero')
     req.params.filename = document.imageHero;
+  if (req.params.image === 'imageDetail')
+    req.params.filename = document.imageDetail;
   // 5) next get image
   next();
 });

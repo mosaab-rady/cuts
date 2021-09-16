@@ -9,6 +9,7 @@ const imageSchema = new mongoose.Schema({
   },
   slug: String,
   image: String,
+  imageDetail: String,
   imageCover: String,
   imageHero: String,
 });
