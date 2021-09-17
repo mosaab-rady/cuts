@@ -196,6 +196,21 @@ exports.getCollectionWithProducts = catchAsync(async (req, res, next) => {
   } else if (req.params.slug === 'elongated') {
     req.filter = { cut: 'elongated' };
     return next();
+  } else if (req.params.slug === 't-shirt') {
+    req.filter = { type: 't-shirt' };
+    return next();
+  } else if (req.params.slug === 'sweat-shirt') {
+    req.filter = { type: 'sweat-shirt' };
+    return next();
+  } else if (req.params.slug === 'long-sleeve') {
+    req.filter = { type: 'long-sleeve' };
+    return next();
+  } else if (req.params.slug === 'polo') {
+    req.filter = { type: 'polo' };
+    return next();
+  } else if (req.params.slug === 'hooded-shirt') {
+    req.filter = { type: 'hooded-shirt' };
+    return next();
   }
   // 1) get the name of the collection
   const slug = req.params.slug;
