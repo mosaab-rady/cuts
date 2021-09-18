@@ -72,6 +72,8 @@ exports.getDocumentImage = catchAsync(async (req, res, next) => {
     req.params.filename = document.imageHero;
   if (req.params.image === 'imageDetail')
     req.params.filename = document.imageDetail;
+  if (req.params.image === 'imageOverview')
+    req.params.filename = document.imageOverview;
   // 5) next get image
   next();
 });

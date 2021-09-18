@@ -36,6 +36,7 @@ exports.uploadImage = upload.fields([
   { name: 'image', maxCount: 1 },
   { name: 'imageHero', maxCount: 1 },
   { name: 'imageDetail', maxCount: 1 },
+  { name: 'imageOverview', maxCount: 1 },
 ]);
 
 exports.resizeImage = catchAsync(async (req, res, next) => {
@@ -102,6 +103,22 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
       fileStream,
       req,
       req.files.imageDetail[0]
+    );
+  }
+
+  if (req.files.imageOverview) {
+    req.body.imageOverview = `collection_imageOverview_${Date.now()}`;
+    const data = await sharp(req.files.imageOverview[0].buffer)
+      .resize(750, 900)
+      .toFormat('jpeg')
+      .jpeg({ quality: 100 })
+      .toBuffer();
+
+    const fileStream = Readable.from(data);
+    await storage(req.body.imageOverview).fromStream(
+      fileStream,
+      req,
+      req.files.imageOverview[0]
     );
   }
 

@@ -12,6 +12,7 @@ const collectionSchema = new mongoose.Schema(
     imageCover: String,
     image: String,
     imageDetail: String,
+    imageOverview: String,
     createdAt: {
       type: Date,
       default: Date.now(),

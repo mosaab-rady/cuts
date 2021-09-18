@@ -12,6 +12,7 @@ const imageSchema = new mongoose.Schema({
   imageDetail: String,
   imageCover: String,
   imageHero: String,
+  imageOverview: String,
 });
 
 imageSchema.pre('save', function (next) {
