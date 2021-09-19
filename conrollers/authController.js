@@ -84,7 +84,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     function (err, decoded) {
       if (err) {
         return next(
-          new AppError('something went wrog!! Please log in again.', 401)
+          new AppError('something went wrong!! Please log in again.', 401)
         );
       }
       return decoded;
@@ -104,6 +104,41 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = currentUser;
   // 7) allow access
   next();
+});
+
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  // 1) check for the cookie
+  const token = req.cookies.jwt_server;
+  if (!token) return next();
+  // 2) check if the cookie is valid
+  const decoded = jwt.verify(
+    token,
+    process.env.JWT_SECRET,
+    function (err, decoded) {
+      if (err) {
+        return next(
+          new AppError('something went wrong!! Please log in again.', 401)
+        );
+      }
+      return decoded;
+    }
+  );
+  // 3) find the user
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser)
+    return next(
+      new AppError(
+        'The user belonging to this token does no longer exist.',
+        401
+      )
+    );
+  // 4) send the user
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user: currentUser,
+    },
+  });
 });
 
 exports.restrictTo =
