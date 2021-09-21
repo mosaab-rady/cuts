@@ -48,7 +48,10 @@ exports.getMyShopping = catchAsync(async (req, res, next) => {
   // 1) get user id from req.user
   const userId = req.user.id;
   // 2) find the user shoppings
-  const shoppings = await Shopping.find({ user: userId });
+  const shoppings = await Shopping.find({ user: userId }).populate(
+    'product',
+    'name color'
+  );
   // 3) send res
   res.status(200).json({
     status: 'success',
