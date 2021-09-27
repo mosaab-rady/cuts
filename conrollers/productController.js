@@ -162,6 +162,26 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getRelatedCuts = catchAsync(async (req, res, next) => {
+  // 1) find related cuts based on the slug
+  const products = await Product.find({
+    collar: req.params.collar,
+    cut: { $ne: req.params.cut },
+  })
+    .select(
+      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
+    )
+    .limit(4);
+
+  // 2) send res.
+  res.status(200).json({
+    status: 'success',
+    data: {
+      products,
+    },
+  });
+});
+
 exports.getTypeOverview = catchAsync(async (req, res, next) => {
   const products = await Product.find({ type: req.params.type })
     .select(
