@@ -164,20 +164,38 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
 
 exports.getRelatedCuts = catchAsync(async (req, res, next) => {
   // 1) find related cuts based on the slug
-  const products = await Product.find({
-    collar: req.params.collar,
-    cut: { $ne: req.params.cut },
-  })
-    .select(
-      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
-    )
-    .limit(4);
+  const product1 = await Product.findOne({
+    collar: 'crew',
+    cut: 'classic',
+  }).select(
+    'name type imageCover imageDetail size price sale color cut collar collectionId createdAt status colorHex slug fabric'
+  );
+
+  const product2 = await Product.findOne({
+    collar: 'hoodie',
+    cut: 'classic',
+  }).select(
+    'name type imageCover imageDetail size price sale color cut collar collectionId createdAt status colorHex slug fabric'
+  );
+  const product3 = await Product.findOne({
+    collar: 'crew',
+    cut: 'split',
+  }).select(
+    'name type imageCover imageDetail size price sale color cut collar collectionId createdAt status colorHex slug fabric'
+  );
+
+  const product4 = await Product.findOne({
+    collar: 'crew',
+    cut: 'elongated',
+  }).select(
+    'name type imageCover imageDetail size price sale color cut collar collectionId createdAt status colorHex slug fabric'
+  );
 
   // 2) send res.
   res.status(200).json({
     status: 'success',
     data: {
-      products,
+      products: [product1, product2, product3, product4],
     },
   });
 });
