@@ -6,7 +6,7 @@ const productController = require('../conrollers/productController');
 const reviewRoutes = require('./reviewRoutes');
 const authController = require('../conrollers/authController');
 
-router.use('/:productid/reviews', reviewRoutes);
+router.use('/:productId/reviews', reviewRoutes);
 
 // router
 //   .route('/testPic')

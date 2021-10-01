@@ -1,4 +1,5 @@
 const Shopping = require('../models/shoppingModel');
+const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getAllShopping = catchAsync(async (req, res, next) => {
@@ -59,4 +60,19 @@ exports.getMyShopping = catchAsync(async (req, res, next) => {
       shoppings,
     },
   });
+});
+
+exports.hasBuyedProduct = catchAsync(async (req, res, next) => {
+  const user = req.user.id;
+  const product = req.params.productId;
+
+  const shopping = await Shopping.findOne({ user, product });
+  if (!shopping)
+    return next(
+      new AppError(
+        'Please buy the product first to be able to add review.',
+        400
+      )
+    );
+  next();
 });

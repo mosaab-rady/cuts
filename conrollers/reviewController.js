@@ -3,14 +3,14 @@ const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getProductUserIds = (req, res, next) => {
-  req.body.product = req.params.productid;
+  req.body.product = req.params.productId;
   req.body.user = req.user.id;
   next();
 };
 
 exports.getAllReviews = catchAsync(async (req, res, next) => {
   let filter = {};
-  if (req.params.productid) filter = { product: req.params.productid };
+  if (req.params.productId) filter = { product: req.params.productId };
   if (req.params.userid) filter = { user: req.params.userid };
   //  1) get all reviews and populate product and user
   const reviews = await Review.find(filter)

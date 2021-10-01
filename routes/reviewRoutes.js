@@ -4,6 +4,7 @@ const router = express.Router({ mergeParams: true });
 
 const reviewController = require('../conrollers/reviewController');
 const authController = require('../conrollers/authController');
+const shoppingController = require('../conrollers/shoppingController');
 
 router
   .route('/')
@@ -11,6 +12,15 @@ router
   .post(
     authController.protect,
     reviewController.getProductUserIds,
+    reviewController.createNewReview
+  );
+
+router
+  .route('/addreview/:productId')
+  .post(
+    authController.protect,
+    reviewController.getProductUserIds,
+    shoppingController.hasBuyedProduct,
     reviewController.createNewReview
   );
 
