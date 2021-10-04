@@ -1,6 +1,38 @@
+const stripe = require('stripe')(
+  'sk_test_51Jgsl7D8ZNTvuT6yJYS40tt5pgknvzj7SA2QLlQABbSg9OfvgeWynjhVzTgxB2ZyCsmlQfmaVSxw6h9bdFbuXL0100Ez5G6vlr'
+);
 const Shopping = require('../models/shoppingModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+
+exports.getCheckoutSession = catchAsync(async (req, res, next) => {
+  const products = req.body.products;
+  const items = products.map((item) => {
+    return {
+      name: item.name,
+      amount: item.price * 100,
+      currency: 'usd',
+      quantity: item.quantity,
+      // images: [`http://localhost:5000/api/v1/images/${item.image}`],
+    };
+  });
+
+  const session = await stripe.checkout.sessions.create({
+    line_items: items,
+    payment_method_types: ['card'],
+    mode: 'payment',
+    cancel_url: 'http://localhost:3000',
+    success_url: 'http://localhost:3000',
+    shipping_address_collection: {
+      allowed_countries: ['AC', 'AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'EG'],
+    },
+  });
+
+  res.status(200).json({
+    status: 'success',
+    session,
+  });
+});
 
 exports.getAllShopping = catchAsync(async (req, res, next) => {
   // 1) finds all shopping

@@ -11,6 +11,12 @@ router.get(
   shoppingController.getMyShopping
 );
 
+router.post(
+  '/checkout-session',
+  authController.protect,
+  shoppingController.getCheckoutSession
+);
+
 router
   .route('/')
   .get(shoppingController.getAllShopping)
