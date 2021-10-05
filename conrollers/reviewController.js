@@ -12,8 +12,14 @@ exports.getAllReviews = catchAsync(async (req, res, next) => {
   let filter = {};
   if (req.params.productId) filter = { product: req.params.productId };
   if (req.params.userid) filter = { user: req.params.userid };
+  let skip = 1;
+  if (req.query.skip) skip = req.query.skip;
+  let limit = '';
+  if (req.query.limit) limit = req.query.limit;
   //  1) get all reviews and populate product and user
   const reviews = await Review.find(filter)
+    .skip((Number(skip) - 1) * 5)
+    .limit(Number(limit))
     .populate('product', 'name')
     .populate('user');
 
