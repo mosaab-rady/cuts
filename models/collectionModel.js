@@ -9,7 +9,10 @@ const collectionSchema = new mongoose.Schema(
       unique: true,
     },
     imageHero: String,
-    imageCover: String,
+    imageCover: {
+      type: String,
+      required: [true, 'A collection must have an Image cover'],
+    },
     image: String,
     imageDetail: String,
     imageOverview: String,

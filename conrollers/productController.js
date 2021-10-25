@@ -122,7 +122,7 @@ exports.getBestSellers = catchAsync(async (req, res, next) => {
     {
       $match: {
         createdAt: {
-          $gte: new Date(new Date().setDate(new Date().getDate() - 30)),
+          $gte: new Date(new Date().setDate(new Date().getDate() - 90)),
         },
       },
     },

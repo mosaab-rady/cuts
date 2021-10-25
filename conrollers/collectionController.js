@@ -74,6 +74,7 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
     );
   }
 
+  // image for section
   if (req.files.image) {
     req.body.image = `collection_image_${Date.now()}`;
     const data = await sharp(req.files.image[0].buffer)
@@ -90,6 +91,7 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
     );
   }
 
+  // image for navbar
   if (req.files.imageDetail) {
     req.body.imageDetail = `collection_imageDetail_${Date.now()}`;
     const data = await sharp(req.files.imageDetail[0].buffer)
@@ -106,6 +108,7 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
     );
   }
 
+  // image for the shop page
   if (req.files.imageOverview) {
     req.body.imageOverview = `collection_imageOverview_${Date.now()}`;
     const data = await sharp(req.files.imageOverview[0].buffer)
@@ -402,7 +405,7 @@ exports.deleteCollectionById = catchAsync(async (req, res, next) => {
   // 1) get the id
   const { id } = req.params;
   // 2) delete the collection
-  const collection = await findOneAndDelete(id);
+  const collection = await Collection.findByIdAndDelete(id);
   // 3) if no collection send error
   if (!collection)
     return next(new AppError('No document found with that ID.', 404));
