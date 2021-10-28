@@ -382,8 +382,25 @@ exports.getProductCollection = catchAsync(async (req, res, next) => {
 });
 
 exports.updateCollectionById = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   // 1) get the id
   const { id } = req.params;
+
+  // check the mode
+  if (req.body.mode) {
+    const doc = await Collection.findOne({ mode: req.body.mode });
+    if (doc) {
+      await Collection.findByIdAndUpdate(
+        doc._id,
+        { mode: 'none' },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
+    }
+  }
+
   // 2) update the collection
   const collection = await Collection.findByIdAndUpdate(id, req.body, {
     new: true,

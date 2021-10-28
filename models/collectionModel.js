@@ -22,8 +22,9 @@ const collectionSchema = new mongoose.Schema(
     },
     mode: {
       type: String,
+      // main=> overview hero & navbar , first=> navbar , second=> overview section
       enum: ['main', 'first', 'second', 'third', 'none'],
-      unique: true,
+      default: 'none',
     },
     slug: String,
   },
