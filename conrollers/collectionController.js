@@ -274,6 +274,44 @@ exports.getProductAsCollection = catchAsync(async (req, res, next) => {
   });
 });
 
+// collection for admin account
+exports.getAccountCollection = catchAsync(async (req, res, next) => {
+  // 1) get the slug
+  const { slug } = req.params;
+  // 2) find the collection
+  const collection = await Collection.findOne({ slug });
+  // 3) send err
+  if (!collection) {
+    return next(new AppError('No document found.', 404));
+  }
+  // 4) send res
+  res.status(200).json({
+    status: 'success',
+    data: {
+      collection,
+    },
+  });
+});
+
+// the default collections for admin account
+exports.getAccountDefaultCollections = catchAsync(async (req, res, next) => {
+  // 1) get the slug
+  const { slug } = req.params;
+  // 2) find the document
+  const collection = await Image.findOne({ slug });
+  // 3) send err
+  if (!collection) {
+    return next(new AppError('No document dound.', 404));
+  }
+  // 4) send res
+  res.status(200).json({
+    status: 'success',
+    data: {
+      collection,
+    },
+  });
+});
+
 exports.grtAllCollections = catchAsync(async (req, res, next) => {
   //  1) find collections
   const collections = await Collection.find();

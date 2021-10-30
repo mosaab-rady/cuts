@@ -27,6 +27,14 @@ router
   );
 
 router
+  .route('/account/collections/:slug')
+  .get(collectionController.getAccountCollection);
+
+router
+  .route('/account/default-collections/:slug')
+  .get(collectionController.getAccountDefaultCollections);
+
+router
   .route('/')
   .get(collectionController.grtAllCollections)
   .post(
