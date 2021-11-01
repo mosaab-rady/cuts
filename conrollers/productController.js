@@ -151,7 +151,7 @@ exports.getBestSellers = catchAsync(async (req, res, next) => {
 
 exports.getAllProducts = catchAsync(async (req, res, next) => {
   const products = await Product.find(req.query).select(
-    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
+    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric amount'
   );
   res.status(200).json({
     status: 'success',

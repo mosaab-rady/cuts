@@ -87,7 +87,7 @@ const productSchema = new mongoose.Schema(
     cut: {
       type: String,
       enum: ['classic', 'elongated', 'split'],
-      required: [true, 'Aproduct must have a cut.'],
+      required: [true, 'A product must have a cut.'],
     },
     collar: {
       type: String,
@@ -168,6 +168,16 @@ productSchema.virtual('status').get(function () {
   ) {
     return 'new';
   } else return 'restocked';
+});
+
+productSchema.virtual('amount').get(function () {
+  return (
+    this.size.small +
+    this.size.medium +
+    this.size.large +
+    this.size.xLarge +
+    this.size.xxLarge
+  );
 });
 
 // add slug to document before save to DB
