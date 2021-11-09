@@ -162,6 +162,19 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
   });
 });
 
+// get the admin page products
+exports.getAccountProducts = catchAsync(async (req, res, next) => {
+  const products = await Product.find().select(
+    'name type cut collar imageCover price size amount fabric'
+  );
+  res.status(200).json({
+    status: 'success',
+    data: {
+      products,
+    },
+  });
+});
+
 exports.getRelatedCuts = catchAsync(async (req, res, next) => {
   // 1) find related cuts based on the slug
   const product1 = await Product.findOne({
@@ -214,6 +227,12 @@ exports.getTypeOverview = catchAsync(async (req, res, next) => {
 });
 
 exports.createProduct = catchAsync(async (req, res, next) => {
+  const fabricFeatures = JSON.parse(req.body.fabricFeatures);
+  const size = JSON.parse(req.body.size);
+
+  req.body.fabricFeatures = fabricFeatures;
+  req.body.size = size;
+
   const product = await Product.create(req.body);
   res.status(201).json({
     status: 'success',

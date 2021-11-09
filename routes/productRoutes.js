@@ -20,6 +20,7 @@ router.get('/best-sellers', productController.getBestSellers);
 router.get('/shirts/:slug', productController.getSingleProduct);
 router.get('/overview/:type', productController.getTypeOverview);
 router.get('/relatedcuts/:collar/:cut', productController.getRelatedCuts);
+router.get('/account/products', productController.getAccountProducts);
 
 router
   .route('/')
