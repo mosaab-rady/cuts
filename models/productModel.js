@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const Schema = mongoose.Schema;
 
 const productSchema = new mongoose.Schema(
   {
@@ -10,7 +11,10 @@ const productSchema = new mongoose.Schema(
       maxLength: [40, 'A product name must be less or eqaul 40 characters'],
       minLength: [10, 'A product name must be more or eqaul 10 characters'],
     },
-    collectionId: mongoose.Schema.Types.ObjectId,
+    collectionId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Collection',
+    },
     type: {
       type: String,
       required: [true, 'A product must have a type'],

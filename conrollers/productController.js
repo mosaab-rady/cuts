@@ -165,7 +165,7 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
 // get the admin page products
 exports.getAccountProducts = catchAsync(async (req, res, next) => {
   const products = await Product.find().select(
-    'name type cut collar imageCover price size amount fabric'
+    'name type cut collar imageCover price size amount fabric slug color'
   );
   res.status(200).json({
     status: 'success',
@@ -252,7 +252,10 @@ exports.getSingleProduct = catchAsync(async (req, res, next) => {
   if (req.query.collar) filter.collar = req.query.collar;
   if (req.query.color) filter.color = req.query.color;
   //  2) find the product
-  const product = await Product.findOne(filter);
+  const product = await Product.findOne(filter).populate(
+    'collectionId',
+    'name'
+  );
 
   // 3) if no product send err
   if (!product) {
@@ -337,6 +340,12 @@ exports.getProductById = catchAsync(async (req, res, next) => {
 exports.updateProductById = catchAsync(async (req, res, next) => {
   // 1) get the ID
   const { id } = req.params;
+
+  const fabricFeatures = JSON.parse(req.body.fabricFeatures);
+  const size = JSON.parse(req.body.size);
+
+  req.body.fabricFeatures = fabricFeatures;
+  req.body.size = size;
 
   // 2) update the product
   const product = await Product.findByIdAndUpdate(id, req.body, {
