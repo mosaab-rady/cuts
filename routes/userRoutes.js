@@ -14,9 +14,11 @@ router.use(authController.protect);
 
 router.use('/:userid/reviews', reviewRoutes);
 
+router.use(authController.restrictTo('admin'));
+
 router
   .route('/')
-  .get(authController.restrictTo('admin'), userController.getAllUsers)
+  .get(userController.getAllUsers)
   .post(userController.createNewUser);
 
 router

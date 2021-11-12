@@ -24,6 +24,8 @@ router
     reviewController.createNewReview
   );
 
+router.use(authController.protect, authController.restrictTo('admin'));
+
 router
   .route('/:id')
   .get(reviewController.getReviewById)

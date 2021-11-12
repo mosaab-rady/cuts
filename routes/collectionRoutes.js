@@ -4,6 +4,7 @@ const router = express.Router();
 
 const collectionController = require('../conrollers/collectionController');
 const productRoutes = require('./productRoutes');
+const authController = require('../conrollers/authController');
 
 // router
 //   .route('/testPic')
@@ -28,16 +29,30 @@ router
 
 router
   .route('/account/collections/:slug')
-  .get(collectionController.getAccountCollection);
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    collectionController.getAccountCollection
+  );
 
 router
   .route('/account/default-collections/:slug')
-  .get(collectionController.getAccountDefaultCollections);
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    collectionController.getAccountDefaultCollections
+  );
 
 router
   .route('/')
-  .get(collectionController.grtAllCollections)
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    collectionController.grtAllCollections
+  )
   .post(
+    authController.protect,
+    authController.restrictTo('admin'),
     collectionController.uploadImage,
     collectionController.resizeImage,
     collectionController.createNewCollection
@@ -52,11 +67,17 @@ router
   .route('/:id')
   .get(collectionController.getCollectionById)
   .patch(
+    authController.protect,
+    authController.restrictTo('admin'),
     collectionController.uploadImage,
     collectionController.resizeImage,
     collectionController.updateCollectionById
   )
-  .delete(collectionController.deleteCollectionById);
+  .delete(
+    authController.protect,
+    authController.restrictTo('admin'),
+    collectionController.deleteCollectionById
+  );
 
 router.route('/:id/products').get(collectionController.getProductCollection);
 

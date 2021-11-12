@@ -5,22 +5,22 @@ const authController = require('../conrollers/authController');
 
 const router = express.Router();
 
-router.get(
-  '/myshoppings',
-  authController.protect,
-  shoppingController.getMyShopping
-);
+router.use(authController.protect);
+
+router.get('/myshoppings', shoppingController.getMyShopping);
 
 router.post(
   '/checkout-session',
-  authController.protect,
+
   shoppingController.getCheckoutSession
 );
+
+router.use(authController.restrictTo('admin'));
 
 router
   .route('/')
   .get(shoppingController.getAllShopping)
-  .post(authController.protect, shoppingController.createNewShopping);
+  .post(shoppingController.createNewShopping);
 
 router.route('/:id').get(shoppingController.getShopping);
 

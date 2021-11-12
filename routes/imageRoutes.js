@@ -4,6 +4,7 @@ const router = express.Router();
 
 const fileController = require('../conrollers/fileController');
 const collectionController = require('../conrollers/collectionController');
+const authController = require('../conrollers/authController');
 
 router
   .route('/image/:slug/:image')
@@ -11,8 +12,14 @@ router
 
 router
   .route('/image')
-  .get(fileController.getAllDocumentImages)
+  .get(
+    authController.protect,
+    authController.restrictTo('admin'),
+    fileController.getAllDocumentImages
+  )
   .post(
+    authController.protect,
+    authController.restrictTo('admin'),
     collectionController.uploadImage,
     collectionController.resizeImage,
     fileController.createImage
@@ -21,6 +28,8 @@ router
 router
   .route('/image/:id')
   .patch(
+    authController.protect,
+    authController.restrictTo('admin'),
     collectionController.uploadImage,
     collectionController.resizeImage,
     fileController.updateImage
