@@ -3,6 +3,7 @@ const User = require('../models/userModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const bcrypt = require('bcrypt');
+const { promisify } = require('util');
 
 const createSendToken = (user, statusCode, res) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -13,9 +14,9 @@ const createSendToken = (user, statusCode, res) => {
     expires: new Date(Date.now + 90 * 24 * 60 * 60 * 1000),
     httpOnly: true,
   };
-  if (process.env.NODE_ENV === 'production') {
-    cookieOptions.secure = true;
-  }
+  // if (process.env.NODE_ENV === 'production') {
+  //   cookieOptions.secure = true;
+  // }
 
   // send cookie
   res.cookie('jwt_server', token, cookieOptions);
@@ -78,18 +79,19 @@ exports.protect = catchAsync(async (req, res, next) => {
       new AppError('You are not logged in! please log in to get access.', 401)
     );
   // 3) verify the cookie
-  const decoded = jwt.verify(
-    token,
-    process.env.JWT_SECRET,
-    function (err, decoded) {
-      if (err) {
-        return next(
-          new AppError('something went wrong!! Please log in again.', 401)
-        );
-      }
-      return decoded;
-    }
-  );
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  // const decoded = jwt.verify(
+  //   token,
+  //   process.env.JWT_SECRET,
+  //   function (err, decoded) {
+  //     if (err) {
+  //       return next(
+  //         new AppError('something went wrong!! Please log in again.', 401)
+  //       );
+  //     } else return decoded;
+  //   }
+  // );
+
   // 4) check for the user
   const currentUser = await User.findById(decoded.id);
   // 5) if no user send error
