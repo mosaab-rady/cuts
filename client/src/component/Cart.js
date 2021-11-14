@@ -5,12 +5,11 @@ import '../css/cart.css';
 import { request } from '../js/axios';
 
 export default function Cart() {
-  const { dispatch } = useContext(myContext);
+  const { dispatch, shoppings } = useContext(myContext);
   const host = '';
 
-  let shoppings = [];
-
-  shoppings = JSON.parse(localStorage.getItem('shoppings'));
+  // let shoppings = [];
+  // shoppings = JSON.parse(localStorage.getItem('shoppings'));
 
   let quantity = 0;
   let totalPrice = 0;

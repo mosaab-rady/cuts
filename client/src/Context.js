@@ -23,7 +23,7 @@ const reducer = (state, action) => {
         };
 
         document.getElementById('cart').style.display = 'block';
-        localStorage.setItem('shoppings', JSON.stringify(orders));
+        // localStorage.setItem('shoppings', JSON.stringify(orders));
 
         return {
           ...state,
@@ -49,7 +49,7 @@ const reducer = (state, action) => {
           const newOrders = orders.filter(
             (item) => item.id !== order.id || item.size !== order.size
           );
-          localStorage.setItem('shoppings', JSON.stringify(newOrders));
+          // localStorage.setItem('shoppings', JSON.stringify(newOrders));
 
           return {
             ...state,
@@ -61,7 +61,7 @@ const reducer = (state, action) => {
           ...orders[i],
           total: orders[i].price * orders[i].quantity,
         };
-        localStorage.setItem('shoppings', JSON.stringify(orders));
+        // localStorage.setItem('shoppings', JSON.stringify(orders));
 
         return {
           ...state,
@@ -77,7 +77,7 @@ const reducer = (state, action) => {
     const newOrders = orders.filter(
       (item) => item.id !== order.id || item.size !== order.size
     );
-    localStorage.setItem('shoppings', JSON.stringify(newOrders));
+    // localStorage.setItem('shoppings', JSON.stringify(newOrders));
 
     return {
       ...state,
@@ -110,7 +110,7 @@ export default function Context({ children }) {
       }
     };
     getMe();
-    localStorage.setItem('shoppings', JSON.stringify([]));
+    // localStorage.setItem('shoppings', JSON.stringify([]));
   }, []);
 
   return (
