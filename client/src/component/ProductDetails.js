@@ -15,10 +15,8 @@ export default function ProductDetails({
   const { dispatch } = useContext(myContext);
   const [size, setSize] = useState('s');
   const [available, setAvailable] = useState(true);
-  const [modal, setModal] = useState('');
 
   useEffect(() => {
-    setModal(document.getElementById('myModal'));
     if (product.size.small === 0) {
       setAvailable(false);
     } else {
@@ -41,6 +39,15 @@ export default function ProductDetails({
   const addToCart = (e, order) => {
     e.preventDefault();
     dispatch({ type: 'ADD_TO_CART', payload: order });
+  };
+
+  const showModal = () => {
+    const modal = document.getElementById('myModal');
+    if (modal.style.display === 'block') {
+      modal.style.display === 'none';
+    } else {
+      modal.style.display === 'block';
+    }
   };
 
   const display = (e) => {
@@ -170,7 +177,7 @@ export default function ProductDetails({
             className='product__detail__sizes__sizeChart'
             id='btn'
             onClick={() => {
-              modal.style.display = 'block';
+              showModal();
             }}
           >
             size chart
@@ -179,13 +186,13 @@ export default function ProductDetails({
             <div
               className='modal-content'
               onClick={() => {
-                modal.style.display = 'none';
+                showModal();
               }}
             >
               <span
                 className='close'
                 onClick={() => {
-                  modal.style.display = 'none';
+                  showModal();
                 }}
               >
                 &times;
