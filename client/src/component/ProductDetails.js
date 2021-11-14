@@ -1,8 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import '../css/productDetail.css';
 import StarRatings from 'react-star-ratings';
 import { request } from '../js/axios';
-import { useEffect } from 'react/cjs/react.development';
 import { Link } from 'react-router-dom';
 import { myContext } from '../Context';
 
@@ -17,14 +16,11 @@ export default function ProductDetails({
   const [available, setAvailable] = useState(true);
 
   useEffect(() => {
-    const checkAvailable = () => {
-      if (product.size.small === 0) {
-        setAvailable(false);
-      } else {
-        setAvailable(true);
-      }
-    };
-    checkAvailable();
+    if (product.size.small === 0) {
+      setAvailable(false);
+    } else {
+      setAvailable(true);
+    }
   }, [product]);
 
   const changeProduct = async ({ id }) => {
