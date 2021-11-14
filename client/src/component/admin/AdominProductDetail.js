@@ -5,7 +5,7 @@ import { removeProduct, updateProduct } from '../../js/productOperations';
 import AddNewColor from './AddNewColor';
 
 export default function AdominProductDetail() {
-  const host = 'http://localhost:5000';
+  const host = '';
   const location = useLocation();
   const { slug } = useParams();
   const [product, setProduct] = useState('');

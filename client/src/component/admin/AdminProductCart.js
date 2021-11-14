@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 export default function AdminProductCart({ item }) {
-  const host = 'http://localhost:5000';
+  const host = '';
 
   return (
     <div>

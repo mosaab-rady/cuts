@@ -4,7 +4,7 @@ import { request } from '../../js/axios';
 import { updateDefault } from '../../js/collectionOperations';
 
 export default function AdminDefaultCollectionDetail() {
-  const host = 'http://localhost:5000';
+  const host = '';
 
   const location = useLocation();
   const [doc, setDoc] = useState('');

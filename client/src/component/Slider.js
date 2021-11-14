@@ -2,7 +2,7 @@ import React from 'react';
 import '../css/slider.css';
 
 export default function Slider({ product }) {
-  const host = 'http://localhost:5000';
+  const host = '';
 
   let slideIndex = 1;
   showDivs(slideIndex);

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../css/section.css';
 
 export default function Section({ image, name, slug }) {
-  const host = 'http://localhost:5000';
+  const host = '';
 
   return (
     <div className='section'>

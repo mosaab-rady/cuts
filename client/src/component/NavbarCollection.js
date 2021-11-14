@@ -10,7 +10,7 @@ export default function NavbarCollection({
   setShop,
   setSidebar,
 }) {
-  const host = 'http://localhost:5000';
+  const host = '';
 
   const hideDropNavbar = () => {
     const dropcollections = document.getElementById(

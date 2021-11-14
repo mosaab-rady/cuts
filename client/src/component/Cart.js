@@ -6,7 +6,7 @@ import { request } from '../js/axios';
 
 export default function Cart() {
   const { dispatch } = useContext(myContext);
-  const host = 'http://localhost:5000';
+  const host = '';
 
   const shoppings = JSON.parse(localStorage.getItem('shoppings'));
 

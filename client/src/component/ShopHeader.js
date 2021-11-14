@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../css/shopheader.css';
 
 export default function ShopHeader() {
-  const host = 'http://localhost:5000';
+  const host = '';
 
   return (
     <section className='shop--header'>
