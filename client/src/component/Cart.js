@@ -11,13 +11,15 @@ export default function Cart() {
   const shoppings = JSON.parse(localStorage.getItem('shoppings'));
 
   let quantity = 0;
-  for (let i = 0; i < shoppings.length; i++) {
-    quantity += shoppings[i].quantity;
-  }
-
   let totalPrice = 0;
-  for (let i = 0; i < shoppings.length; i++) {
-    totalPrice += shoppings[i].total;
+  if (shoppings) {
+    for (let i = 0; i < shoppings.length; i++) {
+      quantity += shoppings[i].quantity;
+    }
+
+    for (let i = 0; i < shoppings.length; i++) {
+      totalPrice += shoppings[i].total;
+    }
   }
 
   const addToCart = (e, order) => {
