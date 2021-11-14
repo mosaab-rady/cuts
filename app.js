@@ -43,7 +43,7 @@ app.use(
           'https://cuts-clone-mern.herokuapp.com',
         ],
         styleSrc: ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
-        imgSrc: ['*'],
+        imgSrc: ["'*'"],
         fontSrc: ["'self'", 'https://*.com', 'data:'],
       },
     },
