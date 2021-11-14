@@ -1,0 +1,30 @@
+.account--body__default__collections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.account--body__default__collections__collection {
+  /* width: fit-content; */
+  padding: 5rem 4rem;
+  border: 1px solid var(--main-black);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--main-black);
+  color: var(--main-white);
+}
+
+.account--body__default__collections__collection:hover {
+  background-color: var(--main-white);
+  color: var(--main-black);
+}
+
+.account--body__default__collections__collection__h3 {
+  font-size: 1.5rem;
+  text-transform: capitalize;
+  font-weight: normal;
+  letter-spacing: 0.8px;
+  /* color: var(--); */
+}

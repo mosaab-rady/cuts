@@ -15,6 +15,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const compression = require('compression');
+const path = require('path');
 
 const app = express();
 
@@ -69,6 +70,14 @@ app.use('/api/v1/reviews', reviewRoutes);
 app.use('/api/v1/shopping', shoppingRoutes);
 app.use('/api/v1/collections', collectionRoutes);
 app.use('/api/v1/images', fileRoutes);
+
+// react
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/build')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '/client/build/index.html'));
+  });
+}
 
 // handling error
 app.use(globalErrorHandler);

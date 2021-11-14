@@ -1,0 +1,210 @@
+.navbar__sidebar {
+  background-color: var(--main-white);
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  position: relative;
+}
+
+.navbar__sidebar__header {
+  position: sticky;
+  top: 0;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  background-color: var(--main-white);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0px 3px 4px rgba(205, 202, 202, 0.25);
+}
+
+.navbar__sidebar__header__close {
+  cursor: pointer;
+}
+
+.navbar__sidebar__header__search {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background-color: rgba(221, 219, 219, 0.37);
+  border-radius: 2rem;
+}
+
+.navbar__sidebar__header__search__inp {
+  background-color: rgba(221, 219, 219, 0.219);
+  border: none;
+  width: 100%;
+  height: 1.5rem;
+}
+
+.navbar__sidebar__bestsellers--container {
+  /* padding: 0 1rem; */
+  padding-left: 1rem;
+  padding-top: 2rem;
+}
+
+.navbar__sidebar__bestsellers__h4 {
+  font-size: 0.8rem;
+  color: #00000065;
+  text-transform: uppercase;
+}
+
+.navbar__sidebar__bestsellers {
+  /* padding: 2rem 0; */
+  padding-top: 2rem;
+  /* display: flex;
+  align-items: center; */
+  display: grid;
+  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  /* justify-content: space-between; */
+  gap: 2rem;
+  /* height: 30rem; */
+  width: 100%;
+  overflow-y: hidden;
+  overflow: scroll;
+  margin-bottom: 2rem;
+}
+
+@media screen and (max-width: 450px) {
+  .navbar__sidebar__bestsellers {
+    grid-template-columns: repeat(3, minmax(140px, 1fr));
+  }
+}
+
+.navbar__sidebar__bestsellers::-webkit-scrollbar {
+  height: 0.5rem;
+}
+
+.navbar__sidebar__groups {
+  padding: 0 1rem;
+  margin-bottom: 2rem;
+}
+
+.navbar__sidebar__groups__group__h3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 1rem;
+  text-transform: capitalize;
+  padding: 1rem 0;
+  /* margin: 1rem 0; */
+  border-top: 1px solid #92929236;
+  border-bottom: 1px solid #92929236;
+  color: var(--main-black);
+}
+
+.navbar__sidebar__account__group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 2rem 1.2rem;
+}
+
+.navbar__sidebar__account__group__h4 {
+  font-size: 0.9rem;
+  font-weight: normal;
+  text-transform: capitalize;
+  color: #0000008c;
+}
+
+.navbar__sidebar__footer {
+  background-color: #c8c8c849;
+  padding: 0 1.2rem;
+}
+
+.navbar__sidebar__footer__headers {
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+}
+
+.navbar__sidebar__footer__headers h3 {
+  font-size: 0.9rem;
+  text-transform: capitalize;
+  padding: 0.5rem 0;
+  color: #0000008c;
+  font-weight: normal;
+}
+
+.navbar__sidebar__footer__headers h4 {
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  padding: 0.3rem 0;
+  font-weight: normal;
+  color: var(--gray);
+}
+
+.navbar__sidebar__footer__signup {
+  padding-bottom: 3.5rem;
+}
+
+.navbar__sidebar__footer__signup__h4 {
+  font-size: 0.7rem;
+  letter-spacing: 0.1rem;
+  color: #0000008c;
+  text-transform: uppercase;
+  font-weight: normal;
+}
+
+.navbar__sidebar__footer__signup__h3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid black;
+  text-transform: capitalize;
+  font-size: 0.9rem;
+  font-weight: normal;
+  margin-top: 0.3rem;
+  color: var(--main-black);
+}
+
+.navbar__sidebar__shop--container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--main-white);
+  z-index: 1000;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.navbar__sidebar__collections--container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--main-white);
+  z-index: 1000;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.navbar__sidebar__shop__header {
+  position: sticky;
+  top: 0;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  background-color: var(--main-white);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  box-shadow: 0px 3px 4px rgba(205, 202, 202, 0.397);
+}
+
+.navbar__sidebar__shop__header__h4 {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1rem;
+  text-transform: capitalize;
+  font-weight: bold;
+}

@@ -1,0 +1,212 @@
+.cart {
+  display: flex;
+  justify-content: flex-end;
+  background-color: rgba(173, 173, 173, 0.459);
+  width: 100%;
+  height: 100%;
+}
+
+.cart--container {
+  opacity: 1;
+  background-color: var(--main-white);
+  height: 100%;
+  width: 24.4rem;
+  overflow: scroll;
+}
+
+.cart--container::-webkit-scrollbar {
+  display: none;
+}
+
+.cart__header {
+  padding: 1rem;
+  border-bottom: 1px solid #dadada;
+}
+
+.cart__header__h4 {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--gray);
+  text-transform: capitalize;
+  font-weight: normal;
+}
+
+.cart__header__h4 svg {
+  width: 0.8rem;
+  cursor: pointer;
+}
+
+.cart__body__empty {
+  padding: 1rem 2rem;
+}
+
+.cart__body__empty__h4 {
+  color: var(--gray);
+  font-size: 1.2rem;
+  font-weight: lighter;
+  text-transform: capitalize;
+  margin-bottom: 1rem;
+}
+
+.cart__body__browse {
+  font-size: 1rem;
+  text-transform: capitalize;
+  font-weight: normal;
+  color: var(--gray);
+  text-decoration: underline;
+}
+
+.cart__body__orders {
+  width: 100%;
+  height: 60vh;
+  overflow-y: scroll;
+  margin-bottom: 2rem;
+}
+
+.cart__body__order {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  border-bottom: 1px solid #dadada;
+  padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+}
+
+.cart__body__order__img--container {
+  width: 5rem;
+}
+
+.cart__body__order__img {
+  width: 100%;
+}
+
+.cart__body__order__detail {
+  margin-right: 2rem;
+}
+
+.cart__body__order__detail__size {
+  font-size: 0.6rem;
+  text-transform: capitalize;
+  color: rgb(163, 163, 163);
+  font-weight: normal;
+  margin-bottom: 0.5rem;
+}
+
+.cart__body__order__detail__name {
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  font-weight: normal;
+}
+
+.cart__body__order__detail__qnt__inp::-webkit-outer-spin-button,
+.cart__body__order__detail__qnt__inp::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+.cart__body__order__detail__qnt__inp[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.cart__body__order__detail__qnt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* padding: 0 0.5rem; */
+  width: 6rem;
+  margin-top: 1rem;
+  border: 1px solid #dadada;
+}
+
+.cart__body__order__detail__qnt__inp {
+  border: none;
+  width: 2rem;
+  height: 100%;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  color: black;
+  /* width: 4rem; */
+}
+
+.cart__body__order__detail__qnt__minus,
+.cart__body__order__detail__qnt__plus {
+  /* width: 0.7rem; */
+  width: 100%;
+  cursor: pointer;
+  padding: 0 0.6rem;
+}
+
+.cart__body__order__close--container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5rem;
+  /* height: 100%; */
+}
+
+.cart__body__order__close {
+  /* width: 0.8rem; */
+  font-size: 1.2rem;
+  font-weight: normal;
+  cursor: pointer;
+  color: #8a8a8a;
+}
+.cart__body__order__close__price {
+  font-size: 0.9rem;
+  color: var(--gray);
+}
+
+.cart__body__footer {
+  padding: 1.5rem;
+  /* box-shadow: 2px -4px 1px rgba(200, 200, 200, 0.356); */
+  border-top: 1px solid #dadada;
+}
+
+.cart__body__footer__price {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.cart__body__footer__header {
+  text-transform: capitalize;
+  font-size: 1.1rem;
+  color: var(--gray);
+}
+
+.cart__body__footer__total {
+  text-transform: capitalize;
+  font-size: 1rem;
+  color: var(--gray);
+}
+
+.cart__body__footer__info {
+  font-size: 0.6rem;
+  font-weight: normal;
+  color: rgba(51, 51, 51, 0.856);
+  margin-bottom: 1rem;
+}
+
+.cart__body__footer__btn {
+  font-size: 1.2rem;
+  font-weight: lighter;
+
+  text-transform: capitalize;
+  border: 1px solid var(--main-black);
+  background-color: var(--main-black);
+  width: 100%;
+  padding: 0.7rem 1rem;
+  color: var(--main-white);
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.cart__body__footer__btn:hover {
+  background-color: var(--main-white);
+  color: var(--main-black);
+}

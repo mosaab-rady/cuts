@@ -1,0 +1,143 @@
+.navbar_notification {
+  display: flex;
+  justify-content: center;
+  background-color: var(--main-black);
+  padding: 0.65rem 0;
+}
+
+.navbar_notification h4 {
+  font-size: 10px;
+  color: var(--main-white);
+  letter-spacing: 0.5px;
+}
+
+.navbar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.navbar__header {
+  padding: 0rem 5.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--main-white);
+  box-shadow: 0px 3px 4px rgba(205, 202, 202, 0.25);
+  position: relative;
+  height: 5rem;
+}
+
+.navbar__header__apps__svg {
+  cursor: pointer;
+  display: none;
+}
+
+.navbar__logo {
+  cursor: pointer;
+  width: 8rem;
+}
+
+.navbar__logo:hover .logo__path {
+  animation: rotate 0.3s linear;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+.navbar__headings {
+  display: flex;
+  width: 35%;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.navbar__headings__h4 {
+  color: var(--gray);
+  padding: 1.95rem 0.5rem;
+  /* border: 1px solid white; */
+  cursor: pointer;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  height: 100%;
+}
+
+.navbar__headings__h4:hover {
+  border-bottom: 1px solid var(--gray);
+}
+
+.navbar__icons {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+.navbar__icons__icon {
+  cursor: pointer;
+}
+
+.navbar__drop {
+  /* display: none; */
+  position: absolute;
+  left: 0;
+  background-color: var(--main-white);
+  width: 100%;
+  height: 100vh;
+  border-top: 1px solid #dddddd;
+  box-shadow: 0px 3px 4px rgba(112, 112, 112, 0.25);
+  z-index: 1000;
+}
+
+.cart--page {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media screen and (max-width: 1000px) {
+  .navbar__header__apps__svg {
+    display: block;
+  }
+
+  .sidebar--container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .navbar__header {
+    padding: 0rem 1rem;
+  }
+
+  .navbar__headings {
+    display: none;
+  }
+
+  .navbar__icons {
+    gap: 0rem;
+  }
+
+  .navbar__icons__icon__hide {
+    display: none;
+  }
+
+  .navbar__logo:hover .logo__path {
+    animation: none;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+}

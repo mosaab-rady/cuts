@@ -1,0 +1,38 @@
+.section {
+  position: relative;
+}
+
+.section__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* height: 100vh; */
+  /* height: 100%; */
+}
+
+.section__box {
+  position: absolute;
+  bottom: 3rem;
+  left: 3rem;
+}
+
+.section__box__h3 {
+  color: var(--main-white);
+  margin-bottom: 0.5rem;
+  text-transform: capitalize;
+  font-size: 1.5rem;
+}
+
+@media screen and (max-width: 750px) {
+  .section__box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}

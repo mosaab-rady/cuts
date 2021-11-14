@@ -1,0 +1,37 @@
+.product__imgs__container {
+  width: 100%;
+  position: relative;
+  height: fit-content;
+}
+
+.product__imgs__main--img {
+  width: 100%;
+}
+
+.product__imgs__btn {
+  position: absolute;
+  background-color: transparent;
+  border: 1px solid #dadada;
+  color: var(--main-black);
+  width: 2rem;
+  height: 2.5rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.product__imgs__btn:hover {
+  background-color: var(--main-black);
+  color: var(--main-white);
+}
+
+.left {
+  top: 50%;
+  left: 0;
+  border-radius: 0rem 0.5rem 0.5rem 0rem;
+}
+
+.right {
+  top: 50%;
+  right: 0;
+  border-radius: 0.5rem 0rem 0rem 0.5rem;
+}
