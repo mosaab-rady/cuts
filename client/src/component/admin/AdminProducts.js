@@ -18,7 +18,7 @@ export default function AdminProducts() {
     });
 
     const getData = async () => {
-      const res = await request('GET', `api/v1/products/${location.pathname}`);
+      const res = await request('GET', `api/v1/products${location.pathname}`);
       if (res) {
         if (res.data.status === 'success') {
           setProducts(res.data.data.products);
