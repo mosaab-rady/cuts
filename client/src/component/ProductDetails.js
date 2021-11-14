@@ -17,11 +17,14 @@ export default function ProductDetails({
   const [available, setAvailable] = useState(true);
 
   useEffect(() => {
-    if (product.size.small === 0) {
-      setAvailable(false);
-    } else {
-      setAvailable(true);
-    }
+    const checkAvailable = () => {
+      if (product.size.small === 0) {
+        setAvailable(false);
+      } else {
+        setAvailable(true);
+      }
+    };
+    checkAvailable();
   }, [product]);
 
   const changeProduct = async ({ id }) => {
