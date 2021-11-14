@@ -44,9 +44,9 @@ export default function ProductDetails({
   const showModal = () => {
     const modal = document.getElementById('myModal');
     if (modal.style.display === 'block') {
-      modal.style.display === 'none';
+      modal.style.display = 'none';
     } else {
-      modal.style.display === 'block';
+      modal.style.display = 'block';
     }
   };
 
