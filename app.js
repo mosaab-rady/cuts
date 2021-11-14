@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(cors());
+  app.use(cors({ origin: true, credentials: true }));
 }
 
 app.options('*', cors());
