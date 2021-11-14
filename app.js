@@ -26,13 +26,13 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(cors({ origin: true, credentials: true }));
+  app.use(cors());
 }
 
 app.options('*', cors());
 
 // Set security HTTP headers
-app.use(helmet());
+// app.use(helmet());
 
 if (process.env.NODE_ENV === 'development') {
   const morgan = require('morgan');
