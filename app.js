@@ -33,11 +33,19 @@ app.options('*', cors());
 
 // Set security HTTP headers
 app.use(
-  helmet.contentSecurityPolicy({
-    useDefaults: true,
-    directives: {
-      'script-src': ["'unsafe-inline'"],
-      'script-src-elem': ["'unsafe-inline'"],
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          'https://cuts-clone-mern.herokuapp.com',
+        ],
+        styleSrc: ["'self'", 'https://fonts.googleapis.com', "'unsafe-inline'"],
+        imgSrc: ["'self'", 'https://*.com'],
+        fontSrc: ["'self'", 'https://*.com', 'data:'],
+      },
     },
   })
 );
