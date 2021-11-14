@@ -8,7 +8,9 @@ export default function Cart() {
   const { dispatch } = useContext(myContext);
   const host = '';
 
-  const shoppings = JSON.parse(localStorage.getItem('shoppings'));
+  let shoppings = [];
+
+  shoppings = JSON.parse(localStorage.getItem('shoppings'));
 
   let quantity = 0;
   let totalPrice = 0;
