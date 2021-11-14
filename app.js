@@ -37,6 +37,7 @@ app.use(
     useDefaults: true,
     directives: {
       'script-src': ["'unsafe-inline'"],
+      'script-src-elem': ["'unsafe-inline'"],
     },
   })
 );
