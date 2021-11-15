@@ -11,7 +11,9 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       amount: item.price * 100,
       currency: 'usd',
       quantity: item.quantity,
-      // images: [`http://localhost:5000/api/v1/images/${item.image}`],
+      images: [
+        `https://cuts-clone-mern.herokuapp.com/api/v1/images/${item.image}`,
+      ],
     };
   });
 
@@ -19,8 +21,8 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     line_items: items,
     payment_method_types: ['card'],
     mode: 'payment',
-    cancel_url: 'http://localhost:3000',
-    success_url: 'http://localhost:3000',
+    cancel_url: `${req.protocol}://${req.get('host')}`,
+    success_url: `${req.protocol}://${req.get('host')}/account`,
     shipping_address_collection: {
       allowed_countries: ['AC', 'AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'EG'],
     },
