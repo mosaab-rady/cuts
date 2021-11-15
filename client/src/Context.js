@@ -17,6 +17,7 @@ const reducer = (state, action) => {
     for (let i = 0; i < state.shoppings.length; i++) {
       if (order.id === orders[i].id && order.size === orders[i].size) {
         console.log('1', orders[i].quantity);
+        orders[i].quantity++;
         orders[i] = { ...orders[i], quantity: orders[i].quantity++ };
         console.log('2', orders[i].quantity);
         orders[i] = {
