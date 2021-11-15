@@ -8,7 +8,6 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // console.log(products);
   const items = products.map((item) => {
     return {
-      id: item.id,
       name: item.name,
       amount: item.price * 100,
       currency: 'usd',
