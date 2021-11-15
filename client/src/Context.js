@@ -60,13 +60,14 @@ const reducer = (state, action) => {
             shoppings: [...newOrders],
           };
         }
-        orders[i] = { ...orders[i], quantity: orders[i].quantity-- };
+        orders[i].quantity--;
+        // orders[i] = { ...orders[i], quantity: orders[i].quantity-- };
         orders[i] = {
           ...orders[i],
           total: orders[i].price * orders[i].quantity,
         };
         // localStorage.setItem('shoppings', JSON.stringify(orders));
-
+        console.log(orders[i]);
         return {
           ...state,
           shoppings: [...orders],
