@@ -11,12 +11,12 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       amount: item.price * 100,
       currency: 'usd',
       quantity: item.quantity,
-      description: {
+      description: JSON.stringify({
         id: item._id,
         size: item.size,
         name: item.name,
         color: item.color,
-      },
+      }),
       // images: [
       //   `${req.protocol}://${req.get('host')}/api/v1/images/${item.image}`,
       // ],
