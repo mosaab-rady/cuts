@@ -1,6 +1,4 @@
-const stripe = require('stripe')(
-  'sk_test_51Jgsl7D8ZNTvuT6yJYS40tt5pgknvzj7SA2QLlQABbSg9OfvgeWynjhVzTgxB2ZyCsmlQfmaVSxw6h9bdFbuXL0100Ez5G6vlr'
-);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Shopping = require('../models/shoppingModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
@@ -13,7 +11,9 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       amount: item.price * 100,
       currency: 'usd',
       quantity: item.quantity,
-      // images: [`http://localhost:5000/api/v1/images/${item.image}`],
+      images: [
+        `https://${window.location.pathname}/api/v1/images/${item.image}`,
+      ],
     };
   });
 
