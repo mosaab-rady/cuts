@@ -50,6 +50,7 @@ exports.webhookCheckout = (req, res, next) => {
   }
 
   if (event.type === 'checkout.session.completed') {
+    console.log(event.data.object.id);
     // const session = await stripe.checkout.sessions.retrieve(
     //   event.data.object.id,
     //   {
