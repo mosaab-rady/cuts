@@ -17,8 +17,6 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     };
   });
 
-  console.log(items);
-
   const session = await stripe.checkout.sessions.create({
     line_items: items,
     payment_method_types: ['card'],
@@ -52,7 +50,13 @@ exports.webhookCheckout = (req, res, next) => {
   }
 
   if (event.type === 'checkout.session.completed') {
-    console.log(event);
+    const session = await stripe.checkout.sessions.retrieve(
+      event.data.object.id,
+      {
+        expand: ['line_items'],
+      }
+    );
+    console.log(session);
   }
 
   res.status(200).json({ received: true });
