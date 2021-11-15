@@ -5,7 +5,6 @@ const catchAsync = require('../utils/catchAsync');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   const products = req.body.products;
-  console.log(products);
   const items = products.map((item) => {
     return {
       name: item.name,
@@ -50,7 +49,7 @@ exports.webhookCheckout = (req, res, next) => {
   }
 
   if (event.type === 'checkout.session.completed') {
-    console.log(event.data.object);
+    console.log(event);
   }
 
   res.status(200).json({ received: true });
