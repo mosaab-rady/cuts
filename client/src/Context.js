@@ -33,10 +33,10 @@ const reducer = (state, action) => {
     }
     document.getElementById('cart').style.display = 'block';
 
-    localStorage.setItem(
-      'shoppings',
-      JSON.stringify([...state.shoppings, action.payload])
-    );
+    // localStorage.setItem(
+    //   'shoppings',
+    //   JSON.stringify([...state.shoppings, action.payload])
+    // );
     return { ...state, shoppings: [...state.shoppings, action.payload] };
   }
   if (action.type === 'DECREASE_ONE') {

@@ -11,9 +11,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       amount: item.price * 100,
       currency: 'usd',
       quantity: item.quantity,
-      images: [
-        `${req.protocol}://${req.get('host')}/api/v1/images/${item.image}`,
-      ],
+      // images: [`http://localhost:5000/api/v1/images/${item.image}`],
     };
   });
 
