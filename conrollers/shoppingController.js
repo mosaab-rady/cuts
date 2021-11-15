@@ -12,8 +12,6 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       amount: item.price * 100,
       currency: 'usd',
       quantity: item.quantity,
-      size: item.size,
-      color: item.color,
       description: JSON.stringify({
         productId: item.id,
         size: item.size,
