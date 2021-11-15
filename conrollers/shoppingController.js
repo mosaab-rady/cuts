@@ -5,6 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   const products = req.body.products;
+  console.log(products);
   const items = products.map((item) => {
     return {
       name: item.name,
