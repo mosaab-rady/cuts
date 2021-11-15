@@ -5,7 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   const products = req.body.products;
-  console.log(products);
+  // console.log(products);
   const items = products.map((item) => {
     return {
       name: item.name,
@@ -13,14 +13,14 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       currency: 'usd',
       quantity: item.quantity,
       description: JSON.stringify({
-        id: item._id,
+        id: item.id,
         size: item.size,
         name: item.name,
         color: item.color,
       }),
-      // images: [
-      //   `${req.protocol}://${req.get('host')}/api/v1/images/${item.image}`,
-      // ],
+      images: [
+        `${req.protocol}://${req.get('host')}/api/v1/images/${item.image}`,
+      ],
     };
   });
 
