@@ -23,8 +23,6 @@ const reducer = (state, action) => {
           total: orders[i].price * orders[i].quantity,
         };
 
-        console.log(orders[i]);
-
         document.getElementById('cart').style.display = 'block';
         // localStorage.setItem('shoppings', JSON.stringify(orders));
 
@@ -49,7 +47,7 @@ const reducer = (state, action) => {
 
     for (let i = 0; i < state.shoppings.length; i++) {
       if (order.id === orders[i].id && order.size === orders[i].size) {
-        if (orders[i].quantity === 0) {
+        if (orders[i].quantity === 1) {
           const newOrders = orders.filter(
             (item) => item.id !== order.id || item.size !== order.size
           );
@@ -67,7 +65,6 @@ const reducer = (state, action) => {
           total: orders[i].price * orders[i].quantity,
         };
         // localStorage.setItem('shoppings', JSON.stringify(orders));
-        console.log(orders[i]);
         return {
           ...state,
           shoppings: [...orders],
