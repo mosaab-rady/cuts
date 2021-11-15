@@ -35,7 +35,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.webhookCheckout = (req, res, next) => {
+exports.webhookCheckout = catchAsync(async (req, res, next) => {
   const signature = req.headers['stripe-signature'];
 
   let event;
@@ -61,8 +61,7 @@ exports.webhookCheckout = (req, res, next) => {
   }
 
   res.status(200).json({ received: true });
-};
-
+});
 exports.getAllShopping = catchAsync(async (req, res, next) => {
   // 1) finds all shopping
   const shoppings = await Shopping.find();
