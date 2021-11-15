@@ -8,19 +8,19 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // console.log(products);
   const items = products.map((item) => {
     return {
+      id: item.id,
       name: item.name,
       amount: item.price * 100,
       currency: 'usd',
       quantity: item.quantity,
       description: JSON.stringify({
-        productId: item.id,
-        size: item.size,
         name: item.name,
         color: item.color,
+        size: item.size,
       }),
-      images: [
-        `${req.protocol}://${req.get('host')}/api/v1/images/${item.image}`,
-      ],
+      // images: [
+      //   `${req.protocol}://${req.get('host')}/api/v1/images/${item.image}`,
+      // ],
     };
   });
 
