@@ -25,6 +25,8 @@ const reducer = (state, action) => {
           total: orders[i].price * orders[i].quantity,
         };
 
+        console.log(orders[i].quantity);
+
         document.getElementById('cart').style.display = 'block';
         // localStorage.setItem('shoppings', JSON.stringify(orders));
 
