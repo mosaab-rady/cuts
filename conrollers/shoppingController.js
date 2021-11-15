@@ -17,12 +17,15 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     };
   });
 
+  console.log(items);
+
   const session = await stripe.checkout.sessions.create({
     line_items: items,
     payment_method_types: ['card'],
     mode: 'payment',
     cancel_url: `${req.protocol}://${req.get('host')}`,
     success_url: `${req.protocol}://${req.get('host')}/account`,
+    customer_email: req.user.email,
     shipping_address_collection: {
       allowed_countries: ['AC', 'AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'EG'],
     },
