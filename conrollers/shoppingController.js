@@ -12,9 +12,9 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       amount: item.price * 100,
       currency: 'usd',
       quantity: item.quantity,
-      images: [
-        `https://cuts-clone-mern.herokuapp.com/api/v1/images/${item.image}`,
-      ],
+      // images: [
+      //   `${req.protocol}://${req.get('host')}/api/v1/images/${item.image}`,
+      // ],
     };
   });
 
@@ -34,6 +34,27 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     session,
   });
 });
+
+exports.webhookCheckout = (req, res, next) => {
+  const signature = req.headers['stripe-signature'];
+
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    return res.status(400).send(`Webhook error: ${err.message}`);
+  }
+
+  if (event.type === 'checkout.session.completed') {
+    console.log(event.data.object);
+  }
+
+  res.status(200).json({ received: true });
+};
 
 exports.getAllShopping = catchAsync(async (req, res, next) => {
   // 1) finds all shopping

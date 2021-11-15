@@ -16,6 +16,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const compression = require('compression');
 const path = require('path');
+const shoppingController = require('./conrollers/shoppingController');
 
 const app = express();
 
@@ -62,6 +63,12 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP, please try again in an hour!',
 });
 app.use('/api', limiter);
+
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }),
+  shoppingController.webhookCheckout
+);
 
 // parse json,cookie and url
 app.use(express.json({ limit: '10kb' }));
