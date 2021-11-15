@@ -57,7 +57,7 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
       }
     );
 
-    console.log(session);
+    console.log(session.line_items);
   }
 
   res.status(200).json({ received: true });
