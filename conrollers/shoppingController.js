@@ -27,6 +27,9 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     shipping_address_collection: {
       allowed_countries: ['AC', 'AD', 'AE', 'AF', 'AG', 'AI', 'AL', 'EG'],
     },
+    phone_number_collection: {
+      enabled: true,
+    },
   });
 
   res.status(200).json({
@@ -86,9 +89,9 @@ exports.getShopping = catchAsync(async (req, res, next) => {
   // 1) get the shopping id from params
   const { id } = req.params;
   // 2) get the shopping and populate{product name}{user name}
-  const shopping = await Shopping.findById(id)
-    .populate('product', 'name')
-    .populate('user', 'email name');
+  const shopping = await Shopping.findById(id);
+  // .populate('product', 'name')
+  // .populate('user', 'email name');
   // 3) send res
   res.status(200).json({
     status: 'success',
@@ -103,7 +106,7 @@ exports.getMyShopping = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   // 2) find the user shoppings
   const shoppings = await Shopping.find({ user: userId }).populate(
-    'product',
+    // 'product',
     'name color'
   );
   // 3) send res
