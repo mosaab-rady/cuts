@@ -25,7 +25,8 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
           return {
             id: elm.id,
             size: elm.size,
-            quantity: elm.quantity,
+            qnt: elm.quantity,
+            price: elm.price,
           };
         })
       ),
@@ -52,19 +53,18 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 const createShoppingCheckout = async (session) => {
   const metadataProducts = JSON.parse(session.metadata.products);
   const user = (await User.findOne({ email: session.customer_email })).id;
-  console.log(metadataProducts);
-  // const promise = Promise.all(
-  //   metadataProducts.map(async (elm) => {
-  //     return await Shopping.create({
-  //       product: elm.id,
-  //       user,
-  //       price: elm.price,
-  //       size: elm.size,
-  //       quantity: elm.quantity,
-  //     });
-  //   })
-  // );
-  // console.log(promise);
+  const promise = Promise.all(
+    metadataProducts.map(async (elm) => {
+      return await Shopping.create({
+        product: elm.id,
+        user,
+        price: elm.price,
+        size: elm.size,
+        quantity: elm.quantity,
+      });
+    })
+  );
+  console.log(promise);
 };
 
 exports.webhookCheckout = catchAsync(async (req, res, next) => {
