@@ -53,18 +53,20 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 const createShoppingCheckout = async (session) => {
   const metadataProducts = JSON.parse(session.metadata.products);
   const user = (await User.findOne({ email: session.customer_email })).id;
-  const promise = Promise.all(
+  const order = [];
+  await Promise.all(
     metadataProducts.map(async (elm) => {
-      return await Shopping.create({
+      const shopping = await Shopping.create({
         product: elm.id,
         user,
         price: elm.price,
         size: elm.size,
         quantity: elm.qnt,
       });
+      order.push(shopping);
     })
   );
-  console.log(promise);
+  console.log(order);
 };
 
 exports.webhookCheckout = catchAsync(async (req, res, next) => {
