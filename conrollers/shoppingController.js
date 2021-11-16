@@ -50,7 +50,7 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
   }
 
   if (event.type === 'checkout.session.completed') {
-    console.log(event);
+    console.log(event.data.object.metadata);
   }
 
   res.status(200).json({ received: true });
