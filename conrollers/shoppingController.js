@@ -42,7 +42,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 const createShoppingCheckout = async (session) => {
   const metadataProducts = JSON.parse(session.metadata.products);
   const user = (await User.findOne({ email: session.customer_email })).id;
-  metadataProducts.forEach((elm) => {
+  metadataProducts.forEach(async (elm) => {
     await Shopping.create({
       product: elm.id,
       user,
