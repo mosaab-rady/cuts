@@ -19,7 +19,15 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
   let session = await stripe.checkout.sessions.create({
     line_items: items,
-    metadata: { products: JSON.stringify(products) },
+    metadata: {
+      products: JSON.stringify(
+        products.map((elm) => {
+          id: elm.id;
+          size: elm.size;
+          quantity: elm.quantity;
+        })
+      ),
+    },
     payment_method_types: ['card'],
     mode: 'payment',
     cancel_url: `${req.protocol}://${req.get('host')}`,
@@ -42,18 +50,19 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 const createShoppingCheckout = async (session) => {
   const metadataProducts = JSON.parse(session.metadata.products);
   const user = (await User.findOne({ email: session.customer_email })).id;
-  const promise = Promise.all(
-    metadataProducts.map(async (elm) => {
-      return await Shopping.create({
-        product: elm.id,
-        user,
-        price: elm.price,
-        size: elm.size,
-        quantity: elm.quantity,
-      });
-    })
-  );
-  console.log(promise);
+  console.log(metadataProducts);
+  // const promise = Promise.all(
+  //   metadataProducts.map(async (elm) => {
+  //     return await Shopping.create({
+  //       product: elm.id,
+  //       user,
+  //       price: elm.price,
+  //       size: elm.size,
+  //       quantity: elm.quantity,
+  //     });
+  //   })
+  // );
+  // console.log(promise);
 };
 
 exports.webhookCheckout = catchAsync(async (req, res, next) => {
