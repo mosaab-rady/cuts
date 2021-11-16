@@ -60,7 +60,7 @@ const createShoppingCheckout = async (session) => {
         user,
         price: elm.price,
         size: elm.size,
-        quantity: elm.quantity,
+        quantity: elm.qnt,
       });
     })
   );
