@@ -13,15 +13,17 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       currency: 'usd',
       quantity: item.quantity,
       description: `${item.color} ${item.name} size: ${item.size} `,
-      // images: [
-      //   `${req.protocol}://${req.get('host')}/api/v1/images/${item.image}`,
-      // ],
     };
   });
 
   let session = await stripe.checkout.sessions.create({
     line_items: items,
-    metadata: JSON.stringify(products),
+    metadata: products.map((item) => {
+      return {
+        productId: item.id,
+        quantity: item.quantity,
+      };
+    }),
     payment_method_types: ['card'],
     mode: 'payment',
     cancel_url: `${req.protocol}://${req.get('host')}`,
