@@ -22,9 +22,11 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     metadata: {
       products: JSON.stringify(
         products.map((elm) => {
-          id: elm.id;
-          size: elm.size;
-          quantity: elm.quantity;
+          return {
+            id: elm.id,
+            size: elm.size,
+            quantity: elm.quantity,
+          };
         })
       ),
     },
