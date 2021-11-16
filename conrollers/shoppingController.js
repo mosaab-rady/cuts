@@ -18,6 +18,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
   let session = await stripe.checkout.sessions.create({
     line_items: items,
+    metadata: { id: '55' },
     payment_method_types: ['card'],
     mode: 'payment',
     cancel_url: `${req.protocol}://${req.get('host')}`,
