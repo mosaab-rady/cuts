@@ -1,5 +1,6 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Shopping = require('../models/shoppingModel');
+const User = require('../models/userModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 
@@ -38,6 +39,20 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   });
 });
 
+const createShoppingCheckout = async (session) => {
+  const metadataProducts = JSON.parse(session.metadata.products);
+  const user = (await User.findOne({ email: session.customer_email })).id;
+  metadataProducts.forEach((elm) => {
+    await Shopping.create({
+      product: elm.id,
+      user,
+      price: elm.price,
+      size: elm.size,
+      quantity: elm.quantity,
+    });
+  });
+};
+
 exports.webhookCheckout = catchAsync(async (req, res, next) => {
   const signature = req.headers['stripe-signature'];
 
@@ -53,11 +68,12 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
   }
 
   if (event.type === 'checkout.session.completed') {
-    console.log(event.data.object);
+    createShoppingCheckout(event.data.object);
   }
 
   res.status(200).json({ received: true });
 });
+
 exports.getAllShopping = catchAsync(async (req, res, next) => {
   // 1) finds all shopping
   const shoppings = await Shopping.find();
@@ -89,9 +105,9 @@ exports.getShopping = catchAsync(async (req, res, next) => {
   // 1) get the shopping id from params
   const { id } = req.params;
   // 2) get the shopping and populate{product name}{user name}
-  const shopping = await Shopping.findById(id);
-  // .populate('product', 'name')
-  // .populate('user', 'email name');
+  const shopping = await Shopping.findById(id)
+    .populate('product', 'name')
+    .populate('user', 'email name');
   // 3) send res
   res.status(200).json({
     status: 'success',
@@ -106,7 +122,7 @@ exports.getMyShopping = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   // 2) find the user shoppings
   const shoppings = await Shopping.find({ user: userId }).populate(
-    // 'product',
+    'product',
     'name color'
   );
   // 3) send res
