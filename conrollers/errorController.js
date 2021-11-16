@@ -18,6 +18,10 @@ const handleValidationErrorDB = (err) => {
   return new AppError(message, 400);
 };
 
+const handleStripeTooManyProducts = () => {
+  return new AppError('Too many products. Only 10 products.', 400);
+};
+
 const sendErrorDev = (err, req, res) => {
   if (req.originalUrl.startsWith('/api')) {
     return res.status(err.statusCode).json({
@@ -61,7 +65,11 @@ module.exports = (err, req, res, next) => {
     if (error.code === 11000) error = handleDuplicateFieldsDB(error);
     if (error.kind === 'ObjectId') error = handleCastErrorDB(error);
     if (error.errors) error = handleValidationErrorDB(error);
-
-    senErrorProd(error, req, res);
+    if (
+      error.type === 'StripeInvalidRequestError' &&
+      error.param === 'metadata'
+    )
+      error = handleStripeTooManyProducts();
+    error = senErrorProd(error, req, res);
   }
 };
