@@ -19,7 +19,10 @@ const handleValidationErrorDB = (err) => {
 };
 
 const handleStripeTooManyProducts = () => {
-  return new AppError('Too many products. Only 10 products.', 400);
+  return new AppError(
+    'Too many products. Please buy at most 6 products at once.',
+    400
+  );
 };
 
 const sendErrorDev = (err, req, res) => {
