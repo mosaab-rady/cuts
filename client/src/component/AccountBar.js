@@ -147,6 +147,26 @@ export default function AccountBar() {
                   products
                 </h4>
               </Link>
+              <Link
+                className='link account--bar__link '
+                to={{
+                  pathname: '/account/orders',
+                }}
+              >
+                <h4
+                  onClick={() => {
+                    displaylinks();
+                    setCurrentlink('orders');
+                  }}
+                  className={
+                    location.pathname === '/account/orders'
+                      ? 'account--bar__Links__link account--bar__links__active'
+                      : 'account--bar__Links__link'
+                  }
+                >
+                  orders
+                </h4>
+              </Link>
             </>
           ) : (
             ''

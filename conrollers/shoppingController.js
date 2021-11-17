@@ -52,7 +52,6 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 });
 
 const createShoppingCheckout = async (session) => {
-  console.log(session);
   const metadataProducts = JSON.parse(session.metadata.products);
   const user = (await User.findOne({ email: session.customer_email })).id;
   const phoneNum = session.customer_details.phone;
@@ -82,13 +81,12 @@ const createShoppingCheckout = async (session) => {
     })
   );
 
-  const order = await Order.create({
+  await Order.create({
     shoppings,
     user,
     phoneNum,
     shippingAddress,
   });
-  console.log(order);
 };
 
 exports.webhookCheckout = catchAsync(async (req, res, next) => {

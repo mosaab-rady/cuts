@@ -7,6 +7,7 @@ const productRoutes = require('./routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const shoppingRoutes = require('./routes/shoppingRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 const collectionRoutes = require('./routes/collectionRoutes');
 const fileRoutes = require('./routes/imageRoutes');
 const helmet = require('helmet');
@@ -91,6 +92,7 @@ app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
 app.use('/api/v1/shopping', shoppingRoutes);
+app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/collections', collectionRoutes);
 app.use('/api/v1/images', fileRoutes);
 
