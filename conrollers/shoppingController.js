@@ -51,8 +51,21 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 });
 
 const createShoppingCheckout = async (session) => {
+  console.log(session);
   const metadataProducts = JSON.parse(session.metadata.products);
   const user = (await User.findOne({ email: session.customer_email })).id;
+  const shippingAddress = {
+    address: {
+      city: session.shipping.address.city,
+      country: session.shipping.address.country,
+      line1: session.shipping.address.line1,
+      line2: session.shipping.address.line2,
+      postal_code: session.shipping.address.postal_code,
+      state: session.shipping.address.state,
+    },
+    name: session.shipping.name,
+  };
+
   const order = [];
   await Promise.all(
     metadataProducts.map(async (elm) => {
@@ -66,7 +79,7 @@ const createShoppingCheckout = async (session) => {
       order.push(shopping._id);
     })
   );
-  console.log(order);
+  console.log(order, shippingAddress);
 };
 
 exports.webhookCheckout = catchAsync(async (req, res, next) => {
