@@ -1,4 +1,5 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const Order = require('../models/orderModel');
 const Shopping = require('../models/shoppingModel');
 const User = require('../models/userModel');
 const AppError = require('../utils/AppError');
@@ -54,6 +55,7 @@ const createShoppingCheckout = async (session) => {
   console.log(session);
   const metadataProducts = JSON.parse(session.metadata.products);
   const user = (await User.findOne({ email: session.customer_email })).id;
+  const phoneNum = session.customer_details.phone;
   const shippingAddress = {
     address: {
       city: session.shipping.address.city,
@@ -79,7 +81,8 @@ const createShoppingCheckout = async (session) => {
       order.push(shopping._id);
     })
   );
-  console.log(order, shippingAddress);
+
+  await Order.create({ shoppings: order, user, phoneNum, shippingAddress });
 };
 
 exports.webhookCheckout = catchAsync(async (req, res, next) => {
