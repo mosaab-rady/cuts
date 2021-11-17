@@ -63,7 +63,7 @@ const createShoppingCheckout = async (session) => {
         size: elm.size,
         quantity: elm.qnt,
       });
-      order.push(shopping);
+      order.push(shopping._id);
     })
   );
   console.log(order);
