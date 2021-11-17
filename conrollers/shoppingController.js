@@ -82,7 +82,13 @@ const createShoppingCheckout = async (session) => {
     })
   );
 
-  await Order.create({ shoppings: order, user, phoneNum, shippingAddress });
+  const order = await Order.create({
+    shoppings: order,
+    user,
+    phoneNum,
+    shippingAddress,
+  });
+  console.log(order);
 };
 
 exports.webhookCheckout = catchAsync(async (req, res, next) => {
