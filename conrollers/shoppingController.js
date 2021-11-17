@@ -68,7 +68,7 @@ const createShoppingCheckout = async (session) => {
     name: session.shipping.name,
   };
 
-  const order = [];
+  const shoppings = [];
   await Promise.all(
     metadataProducts.map(async (elm) => {
       const shopping = await Shopping.create({
@@ -78,12 +78,12 @@ const createShoppingCheckout = async (session) => {
         size: elm.size,
         quantity: elm.qnt,
       });
-      order.push(shopping._id);
+      shoppings.push(shopping._id);
     })
   );
 
   const order = await Order.create({
-    shoppings: order,
+    shoppings,
     user,
     phoneNum,
     shippingAddress,
