@@ -14,6 +14,7 @@ import AdminDefaultCollectionDetail from './admin/AdminDefaultCollectionDetail';
 import AddProduct from './admin/AddProduct';
 import AdominProductDetail from './admin/AdominProductDetail';
 import AdminOrders from './admin/AdminOrders';
+import AdminOrderDetails from './admin/AdminOrderDetails';
 
 export default function MyAccount() {
   const { currentUser } = useContext(myContext);
@@ -53,8 +54,11 @@ export default function MyAccount() {
             <Route exact path='/account/products/:slug'>
               <AdominProductDetail />
             </Route>
-            <Route path='/account/orders'>
+            <Route exact path='/account/orders'>
               <AdminOrders />
+            </Route>
+            <Route exact path='/account/orders/:id'>
+              <AdminOrderDetails />
             </Route>
           </Switch>
         ) : (

@@ -9,8 +9,12 @@ router.use(authController.protect);
 
 router.get('/myorders', orderController.getMyOrders);
 
+router.use(authController.restrictTo('admin'));
+
+router.route('/').get(orderController.getAllOrders);
 router
-  .route('/')
-  .get(authController.restrictTo('admin'), orderController.getAllOrders);
+  .route('/:id')
+  .get(orderController.getOrder)
+  .patch(orderController.updateOrder);
 
 module.exports = router;
