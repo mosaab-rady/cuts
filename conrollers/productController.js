@@ -6,6 +6,7 @@ const { GridFsStorage } = require('multer-gridfs-storage');
 const sharp = require('sharp');
 const { Readable } = require('stream');
 const Shopping = require('../models/shoppingModel');
+const { getOrSetCache } = require('./redisController');
 
 exports.getCollectionId = (req, res, next) => {
   if (req.params.collectionId) req.body.collectionId = req.params.collectionId;
@@ -98,13 +99,16 @@ exports.resizeProductImages = catchAsync(async (req, res, next) => {
 });
 
 exports.getNewReleases = catchAsync(async (req, res, next) => {
-  const products = await Product.find({
-    createdAt: {
-      $gte: new Date(new Date().setDate(new Date().getDate() - 60)),
-    },
-  }).select(
-    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status  fabric'
-  );
+  const products = await getOrSetCache('new_releases', async () => {
+    return await Product.find({
+      createdAt: {
+        $gte: new Date(new Date().setDate(new Date().getDate() - 60)),
+      },
+    }).select(
+      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status  fabric'
+    );
+  });
+
   res.status(200).json({
     status: 'success',
     results: products.length,
@@ -118,27 +122,31 @@ exports.getBestSellers = catchAsync(async (req, res, next) => {
   let limit = '';
   if (req.query.limit) limit = req.query.limit;
 
-  const aggregate = await Shopping.aggregate([
-    {
-      $match: {
-        createdAt: {
-          $gte: new Date(new Date().setDate(new Date().getDate() - 90)),
+  const products = await getOrSetCache(`best_sellers:${limit}`, async () => {
+    const aggregate = await Shopping.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(new Date().setDate(new Date().getDate() - 90)),
+          },
         },
       },
-    },
-    { $group: { _id: '$product', count: { $sum: 1 } } },
-    { $match: { count: { $gt: 10 } } },
-  ]);
+      { $group: { _id: '$product', count: { $sum: 1 } } },
+      { $match: { count: { $gt: 10 } } },
+    ]);
 
-  const productIds = aggregate.map((item) => {
-    return item._id;
+    const productIds = aggregate.map((item) => {
+      return item._id;
+    });
+
+    const products = await Product.find({ _id: { $in: productIds } })
+      .select(
+        'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
+      )
+      .limit(Number(limit));
+
+    return products;
   });
-
-  const products = await Product.find({ _id: { $in: productIds } })
-    .select(
-      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
-    )
-    .limit(Number(limit));
 
   res.status(200).json({
     status: 'success',
@@ -150,9 +158,12 @@ exports.getBestSellers = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllProducts = catchAsync(async (req, res, next) => {
-  const products = await Product.find().select(
-    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric amount'
-  );
+  const products = await getOrSetCache('all_products', async () => {
+    return await Product.find().select(
+      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric amount'
+    );
+  });
+
   res.status(200).json({
     status: 'success',
     results: products.length,
@@ -176,49 +187,46 @@ exports.getAccountProducts = catchAsync(async (req, res, next) => {
 });
 
 exports.getRelatedCuts = catchAsync(async (req, res, next) => {
-  // 1) find related cuts based on the slug
-  const product1 = await Product.findOne({
-    collar: 'crew',
-    cut: 'classic',
-  }).select(
-    'name type imageCover imageDetail size price sale color cut collar collectionId createdAt status colorHex slug fabric'
-  );
+  const products = await getOrSetCache('related_cuts', async () => {
+    // 1) find defferent cuts for products
+    const findProduct = async (cut, collar) => {
+      return await Product.findOne({
+        collar,
+        cut,
+      }).select(
+        'name type imageCover imageDetail size price sale color cut collar collectionId createdAt status colorHex slug fabric'
+      );
+    };
 
-  const product2 = await Product.findOne({
-    collar: 'hoodie',
-    cut: 'classic',
-  }).select(
-    'name type imageCover imageDetail size price sale color cut collar collectionId createdAt status colorHex slug fabric'
-  );
-  const product3 = await Product.findOne({
-    collar: 'crew',
-    cut: 'split',
-  }).select(
-    'name type imageCover imageDetail size price sale color cut collar collectionId createdAt status colorHex slug fabric'
-  );
+    const product1 = await findProduct('classic', 'crew');
+    const product2 = await findProduct('classic', 'hoodie');
+    const product3 = await findProduct('split', 'crew');
+    const product4 = await findProduct('elongated', 'crew');
 
-  const product4 = await Product.findOne({
-    collar: 'crew',
-    cut: 'elongated',
-  }).select(
-    'name type imageCover imageDetail size price sale color cut collar collectionId createdAt status colorHex slug fabric'
-  );
+    const products = [product1, product2, product3, product4];
+
+    return products;
+  });
 
   // 2) send res.
   res.status(200).json({
     status: 'success',
     data: {
-      products: [product1, product2, product3, product4],
+      products,
     },
   });
 });
 
 exports.getTypeOverview = catchAsync(async (req, res, next) => {
-  const products = await Product.find({ type: req.params.type })
-    .select(
-      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
-    )
-    .limit(5);
+  const { type } = req.params;
+
+  const products = await getOrSetCache('type_overview', async () => {
+    return await Product.find({ type })
+      .select(
+        'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
+      )
+      .limit(5);
+  });
 
   res.status(200).json({
     status: 'success',
