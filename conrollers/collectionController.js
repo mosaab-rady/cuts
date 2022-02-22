@@ -5,10 +5,10 @@ const catchAsync = require('../utils/catchAsync');
 const { Readable } = require('stream');
 const { GridFsStorage } = require('multer-gridfs-storage');
 const AppError = require('../utils/AppError');
-const { findOneAndDelete } = require('../models/collectionModel');
 const Shopping = require('../models/shoppingModel');
 const Product = require('../models/productModel');
 const Image = require('../models/imageModel');
+const { getOrSetCache } = require('./redisController');
 
 const storage = (filename) =>
   new GridFsStorage({
@@ -129,65 +129,75 @@ exports.resizeImage = catchAsync(async (req, res, next) => {
 });
 
 exports.getBestSellersCollection = catchAsync(async (req, res, next) => {
-  // 1) find best sellers products
-  const aggregate = await Shopping.aggregate([
-    {
-      $match: {
-        createdAt: {
-          $gte: new Date(new Date().setDate(new Date().getDate() - 30)),
+  const collection = await getOrSetCache('collection_bestsellers', async () => {
+    // 1) find best sellers products
+    const aggregate = await Shopping.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: new Date(new Date().setDate(new Date().getDate() - 30)),
+          },
         },
       },
-    },
-    { $group: { _id: '$product', count: { $sum: 1 } } },
-    { $match: { count: { $gt: 10 } } },
-  ]);
+      { $group: { _id: '$product', count: { $sum: 1 } } },
+      { $match: { count: { $gt: 10 } } },
+    ]);
 
-  const productIds = aggregate.map((item) => {
-    return item._id;
+    const productIds = aggregate.map((item) => {
+      return item._id;
+    });
+
+    const products = await Product.find({ _id: { $in: productIds } }).select(
+      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
+    );
+    // 2) find the best sellers imageCover from Image
+    const doc = await Image.findOne({ slug: 'best-sellers' });
+    let imageCover;
+    if (doc) imageCover = doc.imageCover;
+
+    return {
+      name: 'best sellers',
+      imageCover,
+      products,
+    };
   });
 
-  const products = await Product.find({ _id: { $in: productIds } }).select(
-    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
-  );
-  // 2) find the best sellers imageCover from Image
-  const doc = await Image.findOne({ slug: 'best-sellers' });
-  let imageCover;
-  if (doc) imageCover = doc.imageCover;
   // 3) send res as a collections
   res.status(200).json({
     status: 'success',
     data: {
-      collection: {
-        name: 'best sellers',
-        imageCover,
-        products,
-      },
+      collection,
     },
   });
 });
 
 exports.getNewReleasesCollection = catchAsync(async (req, res, next) => {
-  // 1) get the new products
-  const products = await Product.find({
-    createdAt: {
-      $gte: new Date(new Date().setDate(new Date().getDate() - 60)),
-    },
-  }).select(
-    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
-  );
-  // 2) find the new releases imageCover
-  const doc = await Image.findOne({ slug: 'new-releases' });
-  let imageCover;
-  if (doc) imageCover = doc.imageCover;
+  const collection = await getOrSetCache('collection_newreleases', async () => {
+    // 1) get the new products
+    const products = await Product.find({
+      createdAt: {
+        $gte: new Date(new Date().setDate(new Date().getDate() - 60)),
+      },
+    }).select(
+      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
+    );
+    // 2) find the new releases imageCover
+    const doc = await Image.findOne({ slug: 'new-releases' });
+    let imageCover;
+    if (doc) imageCover = doc.imageCover;
+
+    return {
+      name: 'new releases',
+      imageCover,
+      products,
+    };
+  });
+
   // 3) send res as a collection
   res.status(200).json({
     status: 'success',
     data: {
-      collection: {
-        name: 'new releases',
-        products,
-        imageCover,
-      },
+      collection,
     },
   });
 });
@@ -234,14 +244,19 @@ exports.getCollectionWithProducts = catchAsync(async (req, res, next) => {
   }
   // 1) get the name of the collection
   const slug = req.params.slug;
-  // 2) find the collection and populate the products
-  const collection = await Collection.findOne({ slug }).populate({
-    path: 'products',
-    select:
-      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric',
+
+  const collection = await getOrSetCache(`collection_${slug}`, async () => {
+    // 2) find the collection and populate the products
+    const collection = await Collection.findOne({ slug }).populate({
+      path: 'products',
+      select:
+        'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric',
+    });
+    // 3) if no collection sen err
+    if (!collection) return next(new AppError('No document found.', 404));
+
+    return collection;
   });
-  // 3) if no collection sen err
-  if (!collection) return next(new AppError('No document found.', 404));
   // 4) send res.
   res.status(200).json({
     status: 'success',
@@ -253,23 +268,29 @@ exports.getCollectionWithProducts = catchAsync(async (req, res, next) => {
 
 // get product as a collection for filter
 exports.getProductAsCollection = catchAsync(async (req, res, next) => {
-  // 1) filter the products with req.filter
-  const products = await Product.find(req.filter).select(
-    'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
-  );
-  // 2) find the imageCover
-  const doc = await Image.findOne({ slug: req.params.slug });
-  let imageCover;
-  if (doc) imageCover = doc.imageCover;
+  const { type } = req.filter;
+
+  const collection = await getOrSetCache(`collection_${type}`, async () => {
+    // 1) filter the products with req.filter
+    const products = await Product.find(req.filter).select(
+      'name  type imageCover imageDetail size price sale color cut  collar collectionId createdAt status colorHex slug fabric'
+    );
+    // 2) find the imageCover
+    const doc = await Image.findOne({ slug: req.params.slug });
+    let imageCover;
+    if (doc) imageCover = doc.imageCover;
+
+    return {
+      name: req.params.slug,
+      products,
+      imageCover,
+    };
+  });
   // 3) send res as a collection
   res.status(200).json({
     status: 'success',
     data: {
-      collection: {
-        name: req.params.slug,
-        products,
-        imageCover,
-      },
+      collection,
     },
   });
 });
@@ -313,8 +334,10 @@ exports.getAccountDefaultCollections = catchAsync(async (req, res, next) => {
 });
 
 exports.grtAllCollections = catchAsync(async (req, res, next) => {
-  //  1) find collections
-  const collections = await Collection.find();
+  const collections = await getOrSetCache('all_collection', async () => {
+    //  1) find collections
+    return await Collection.find();
+  });
   // 2) send res.
   res.status(200).json({
     status: 'success',
@@ -355,16 +378,19 @@ exports.getCollectionById = catchAsync(async (req, res, next) => {
 });
 
 exports.getDisplayedCollection = catchAsync(async (req, res, next) => {
-  // const query = req.query;
-  // let filter = { ...query };
   // 1) get the collection mode
   if (!req.query.mode && !req.query.name)
     return next(new AppError('Please use query values.', 400));
-  // const { mode } = req.params;
-  // 2) find the collection
-  const collection = await Collection.find(req.query);
-  // 3) if no collection continue
-  if (!collection) return next(new AppError('No document found.', 404));
+
+  const collection = await getOrSetCache(
+    `collection_display_${req.query.name || req.query.mode}`,
+    async () => {
+      // 2) find the collection
+      const collection = await Collection.find(req.query);
+
+      return collection;
+    }
+  );
   // 4) send res
   res.status(200).json({
     status: 'success',
@@ -383,16 +409,24 @@ exports.getCollectionProducts = catchAsync(async (req, res, next) => {
   // 1) get the id
   if (!req.query.mode && !req.query.name)
     return next(new AppError('Please use query values.', 400));
-  // 2) find the collection and populate products
-  const collection = await Collection.findOne(req.query).populate({
-    path: 'products',
-    select:
-      'collar color name imageCover imageDetail model price sale type cut size',
-    options: { limit: limit },
-  });
-  // 3) if no cllection send error
-  if (!collection)
-    return next(new AppError('No document found with that ID.', 404));
+
+  const collection = await getOrSetCache(
+    `collection_display_products_${req.query.name || req.query.mode}`,
+    async () => {
+      // 2) find the collection and populate products
+      const collection = await Collection.findOne(req.query).populate({
+        path: 'products',
+        select:
+          'collar color name imageCover imageDetail model price sale type cut size',
+        options: { limit: limit },
+      });
+      // 3) if no cllection send error
+      if (!collection)
+        return next(new AppError('No document found with that ID.', 404));
+
+      return collection;
+    }
+  );
   // 4) send res
   res.status(200).json({
     status: 'success',
