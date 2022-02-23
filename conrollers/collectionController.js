@@ -454,7 +454,6 @@ exports.getProductCollection = catchAsync(async (req, res, next) => {
 });
 
 exports.updateCollectionById = catchAsync(async (req, res, next) => {
-  console.log(req.body);
   // 1) get the id
   const { id } = req.params;
 
