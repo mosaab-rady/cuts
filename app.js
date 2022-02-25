@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(cors());
+  app.use(cors({ credentials: true, origin: 'http://localhost' }));
 }
 
 app.options('*', cors());
@@ -52,10 +52,8 @@ app.use(
   })
 );
 
-if (process.env.NODE_ENV === 'development') {
-  const morgan = require('morgan');
-  app.use(morgan('dev'));
-}
+const morgan = require('morgan');
+app.use(morgan('dev'));
 
 // Limit requests from same API
 const limiter = rateLimit({
@@ -96,13 +94,13 @@ app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/collections', collectionRoutes);
 app.use('/api/v1/images', fileRoutes);
 
-// react
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'client/build')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/client/build/index.html'));
-  });
-}
+// // react
+// if (process.env.NODE_ENV === 'production') {
+//   app.use(express.static(path.join(__dirname, 'client')));
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, '/client/index.html'));
+//   });
+// }
 
 // handling error
 app.use(globalErrorHandler);
