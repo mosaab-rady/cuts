@@ -5,7 +5,7 @@ services:
     ports:
       - 6379:6379
   cuts:
-    image: cuts:1.0
+    image: mosaabradi/cuts:1.0
     ports:
       - 5000:5000
     depends_on:
