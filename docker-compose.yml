@@ -3,9 +3,19 @@ services:
   redis:
     image: redis
   cuts:
-    image: mosaabradi/cuts:1.0
+    image: cuts:2.0
     ports:
       - 5000:5000
     depends_on:
       - redis
     restart: always
+    environment:
+      - PORT=${PORT}
+      - NODE_ENV=${NODE_ENV}
+      - DATABASE=${DATABASE}
+      - JWT_SECRET=${JWT_SECRET}
+      - STRIPE_PUBLISH_KEY=${STRIPE_PUBLISH_KEY}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+      - DEFAULT_EXPIRATION=${DEFAULT_EXPIRATION}
+      - REDIS_URL=${REDIS_URL}
