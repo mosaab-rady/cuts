@@ -17,7 +17,6 @@ jobs:
         name: Build & push Docker image
         with:
           image: mosaabradi/cuts
-          tags: 1.1
           registry: docker.io
           tags: 2.0
           username: ${{ secrets.DOCKER_USERNAME }}
