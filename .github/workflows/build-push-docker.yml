@@ -19,5 +19,6 @@ jobs:
           image: mosaabradi/cuts
           tags: 1.1
           registry: docker.io
+          tags: 2.0
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
