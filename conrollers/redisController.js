@@ -1,29 +1,29 @@
-const { createClient } = require('redis');
+// const { createClient } = require('redis');
 
-const client = createClient({
-  url: `redis://${process.env.REDIS_URL}`,
-});
-(async () => {
-  await client.connect();
-})();
+// const client = createClient({
+//   url: `redis://${process.env.REDIS_URL}`,
+// });
+// (async () => {
+//   await client.connect();
+// })();
 
-async function getOrSetCache(key, cb) {
-  const expireTime = process.env.DEFAULT_EXPIRATION;
+// async function getOrSetCache(key, cb) {
+//   const expireTime = process.env.DEFAULT_EXPIRATION;
 
-  // 1) get data from redis cach
-  let data = await client.get(key);
-  // 2) if data does exist return it
-  if (data !== null) {
-    console.log('cache hit');
-    return JSON.parse(data);
-  }
-  // 3) find data from database using cb
-  console.log('cache miss');
-  data = await cb();
-  // 4) set data to redis cach
-  await client.setEx(key, expireTime, JSON.stringify(data));
-  // 4) return data
-  return data;
-}
+//   // 1) get data from redis cach
+//   let data = await client.get(key);
+//   // 2) if data does exist return it
+//   if (data !== null) {
+//     console.log('cache hit');
+//     return JSON.parse(data);
+//   }
+//   // 3) find data from database using cb
+//   console.log('cache miss');
+//   data = await cb();
+//   // 4) set data to redis cach
+//   await client.setEx(key, expireTime, JSON.stringify(data));
+//   // 4) return data
+//   return data;
+// }
 
-module.exports = { getOrSetCache };
+// module.exports = { getOrSetCache };

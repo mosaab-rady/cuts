@@ -1,5 +1,5 @@
 const express = require('express');
-// const dotenv = require('dotenv').config();
+const dotenv = require('dotenv').config({ path: `${__dirname}/./config.env` });
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const globalErrorHandler = require('./conrollers/errorController');
@@ -9,7 +9,6 @@ const reviewRoutes = require('./routes/reviewRoutes');
 const shoppingRoutes = require('./routes/shoppingRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const collectionRoutes = require('./routes/collectionRoutes');
-const fileRoutes = require('./routes/imageRoutes');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -93,7 +92,6 @@ app.use('/api/v1/reviews', reviewRoutes);
 app.use('/api/v1/shopping', shoppingRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/collections', collectionRoutes);
-app.use('/api/v1/images', fileRoutes);
 
 // // react
 // if (process.env.NODE_ENV === 'production') {
