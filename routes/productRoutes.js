@@ -29,16 +29,13 @@ router.route('/').get(productController.getAllProducts).post(
   productController.createProduct
 );
 
-// router
-//   .route('/:id')
-//   .get(productController.getProductById)
-//   .patch(
-//     authController.protect,
-//     authController.restrictTo('admin'),
-//     productController.uploadProductImages,
-//     productController.resizeProductImages,
-//     productController.updateProductById
-//   )
+router.route('/:id').get(productController.getProductById).patch(
+  //     authController.protect,
+  //     authController.restrictTo('admin'),
+  //     productController.uploadProductImages,
+  //     productController.resizeProductImages,
+  productController.updateProductById
+);
 //   .delete(
 //     authController.protect,
 //     authController.restrictTo('admin'),
