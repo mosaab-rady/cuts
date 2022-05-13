@@ -6,10 +6,10 @@ const productSchema = Joi.object({
     .valid('t-shirt', 'polo', 'long-sleeve', 'sweat-shirt', 'hooded-shirt')
     .required(),
   fabric: Joi.string().min(1).max(50).required(),
-  collection_name: Joi.string().allow(''),
-  size_and_fit: Joi.array().items(Joi.string()).allow(''),
-  material_and_care: Joi.array().items(Joi.string()).allow(''),
-  reason: Joi.string().allow(''),
+  collection_name: Joi.string().allow(null),
+  size_and_fit: Joi.array().items(Joi.string()).allow(null),
+  material_and_care: Joi.array().items(Joi.string()).allow(null),
+  reason: Joi.string().allow(null),
   price: Joi.number().required(),
   summary: Joi.string().required(),
   cut: Joi.string().required().valid('classic', 'elongated', 'split'),
@@ -28,7 +28,7 @@ const productSchema = Joi.object({
   images: Joi.array().items(Joi.string()),
   ratings_quantity: Joi.number().default(0),
   ratings_average: Joi.number().default(4.5),
-  slug: Joi.string().max(50).allow(''),
+  slug: Joi.string().max(50).allow(null),
   created_at: Joi.date(),
 });
 

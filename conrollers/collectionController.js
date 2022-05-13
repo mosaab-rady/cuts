@@ -1,3 +1,4 @@
+const Joi = require('joi');
 const { default: slugify } = require('slugify');
 const db = require('../db');
 const collectionSchema = require('../db/collectionSchema');
@@ -105,7 +106,6 @@ exports.updateCollectionById = catchAsync(async (req, res, next) => {
   const query = `UPDATE collections SET ${columns.join(',')} WHERE id=$${
     columns.length + 1
   }`;
-  console.log(`query is: ${query}.`);
   // 9) update collection
   await db.query(query, query_values);
   // 10) send res
@@ -133,6 +133,65 @@ exports.deleteCollectionById = catchAsync(async (req, res, next) => {
   // 5) send res
   res.status(204).json({
     status: 'success',
+  });
+});
+
+exports.getDisplayedCollection = catchAsync(async (req, res, next) => {
+  // get collection by it`s mode column
+  // 1) get the query
+  const { mode } = req.query;
+  // 2) if no query send err
+  if (!mode) {
+    return next(new AppError('Please use query values.', 400));
+  }
+  // 3) validate query values
+  Joi.assert(mode, Joi.string().valid('main', 'first', 'second', 'third'));
+  // 4) write query
+  const columns = `id, name, image_hero, image_cover, image_detail, image_overview, image, created_at, mode, slug`;
+  const query = `SELECT ${columns} FROM collections WHERE mode = $1`;
+  // 5) select from database
+  const { rows, rowCount } = await db.query(query, [mode]);
+  // 6) check if the collection exist
+  if (rowCount !== 1) {
+    return next(new AppError('No collection found with that mode.', 404));
+  }
+  // 7) send res
+  res.status(200).json({
+    status: 'success',
+    data: {
+      collection: rows[0],
+    },
+  });
+});
+
+exports.getProductCollection = catchAsync(async (req, res, next) => {
+  // get colection by id and find it`s products
+  // 1) get the id of collection
+  const { id } = req.params;
+  // 2) find collection
+  let { rows, rowCount } = await db.query(
+    `SELECT * FROM collections WHERE id=$1`,
+    [id]
+  );
+  // 3) check if the collection exist
+  if (rowCount !== 1) {
+    return next(new AppError('No collection found with that ID.', 404));
+  }
+  // 4) find it`s products
+  const products_columns =
+    'products.id,products.name,products.type,products.fabric,products.price,products.cut,products.collar,products.color,products.color_hex,products.small_size,products.medium_size,products.large_size,products.x_large_size,products.xx_large_size,products.image_cover,products.image_detail,products.slug ';
+  const query = `SELECT ${products_columns} FROM products WHERE products.collection_name = $1`;
+  const result = await db.query(query, [rows[0].name]);
+  // 5) send res
+  res.status(200).json({
+    status: 'success',
+    data: {
+      collection: {
+        name: rows[0].name,
+        image_cover: rows[0].image_cover,
+        products: result.rows,
+      },
+    },
   });
 });
 

@@ -10,7 +10,7 @@ const collectionSchema = Joi.object({
   created_at: Joi.date(),
   mode: Joi.string()
     .default('none')
-    .valid('main', 'first', 'socend', 'third', 'none'),
+    .valid('main', 'first', 'second', 'third', 'none'),
   slug: Joi.string().allow(null),
 });
 

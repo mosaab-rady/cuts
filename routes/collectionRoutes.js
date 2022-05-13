@@ -58,7 +58,7 @@ router
     collectionController.createNewCollection
   );
 
-// router.route('/display').get(collectionController.getDisplayedCollection);
+router.route('/display').get(collectionController.getDisplayedCollection);
 // router
 //   .route('/display/products')
 //   .get(collectionController.getCollectionProducts);
@@ -79,6 +79,6 @@ router
     collectionController.deleteCollectionById
   );
 
-// router.route('/:id/products').get(collectionController.getProductCollection);
+router.route('/:id/products').get(collectionController.getProductCollection);
 
 module.exports = router;
