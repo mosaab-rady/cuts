@@ -11,6 +11,3 @@ CREATE TABLE collections (
 	slug VARCHAR(50),
 	CONSTRAINT mode_type CHECK (mode = 'main' OR mode = 'first' OR mode = 'socend' OR mode = 'third' Or mode = 'none')
 );
-
-
-

@@ -12,6 +12,8 @@ const fabricShema = Joi.object({
   durable: Joi.boolean().default(false),
   lightweight: Joi.boolean().default(false),
   natural_softness: Joi.boolean().default(false),
+  material_and_care: Joi.array().items(Joi.string().allow(null)),
+  why_we_made_this: Joi.string().allow(null),
 });
 
 module.exports = fabricShema;

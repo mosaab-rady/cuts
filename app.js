@@ -10,6 +10,8 @@ const shoppingRoutes = require('./routes/shoppingRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const collectionRoutes = require('./routes/collectionRoutes');
 const fabricRoutes = require('./routes/fabricRoutes');
+const cutsRoutes = require('./routes/cutRoutes');
+const typesRoutes = require('./routes/typeRoutes');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -94,7 +96,8 @@ app.use('/api/v1/shopping', shoppingRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/collections', collectionRoutes);
 app.use('/api/v1/fabrics', fabricRoutes);
-
+app.use('/api/v1/types', typesRoutes);
+app.use('/api/v1/cuts', cutsRoutes);
 // // react
 // if (process.env.NODE_ENV === 'production') {
 //   app.use(express.static(path.join(__dirname, 'client')));

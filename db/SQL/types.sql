@@ -1,0 +1,4 @@
+CREATE TABLE types(
+	type VARCHAR(20) PRIMARY KEY,
+	summary TEXT NOT NULL
+)

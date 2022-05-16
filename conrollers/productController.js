@@ -6,9 +6,9 @@ const catchAsync = require('../utils/catchAsync');
 
 exports.getAllProducts = catchAsync(async (req, res, next) => {
   // 1) select all products
-  const { rowCount, rows } = await db.query(
-    'SELECT products.id,products.name,products.type,products.fabric,products.price,products.cut,products.collar,products.color,products.color_hex,products.small_size,products.medium_size,products.large_size,products.x_large_size,products.xx_large_size,products.image_cover,products.image_detail,products.slug FROM products'
-  );
+  const columns = `products.id,products.name,products.type,products.fabric,products.price,products.cut,products.collar,products.color,products.color_hex,products.small_size,products.medium_size,products.large_size,products.x_large_size,products.xx_large_size,products.image_cover,products.image_detail,products.slug`;
+
+  const { rowCount, rows } = await db.query(`SELECT ${columns} FROM products`);
   // 2) send res
   res.status(200).json({
     status: 'success',
@@ -23,8 +23,12 @@ exports.getProductById = catchAsync(async (req, res, next) => {
   // 1) get the id
   const { id } = req.params;
   // 2) select from database
+  const columns = `products.id,products.name,products.type,products.fabric,products.price, products.cut, products.collar, products.color, products.color_hex, products.small_size,products.medium_size, products.large_size, products.x_large_size, products.xx_large_size,products.image_cover, products.image_detail, products.images, products.ratings_quantity, products.ratings_average, products.slug, products.created_at, fabrics.stretch,fabrics.anti_billing, fabrics.buttery_soft, fabrics.pre_shrunk, fabrics.wrinkle_free, fabrics.color_and_fit_retention, fabrics.breathable, fabrics.durable, fabrics.lightweight, fabrics.natural_softness, fabrics.material_and_care, fabrics.why_we_made_this,types.summary, cuts.size_and_fit`;
+
+  const joins = `JOIN fabrics ON products.fabric = fabrics.name JOIN cuts ON products.cut=cuts.cut JOIN types ON products.type=types.type`;
+
   const { rowCount, rows } = await db.query(
-    'SELECT products.id,products.name,products.type,products.fabric,products.price,products.size_and_fit,products.material_and_care,products.reason,products.summary, products.cut, products.collar, products.color, products.color_hex, products.small_size,products.medium_size, products.large_size, products.x_large_size, products.xx_large_size,products.image_cover, products.image_detail, products.images, products.ratings_quantity, products.ratings_average, products.slug, products.created_at, fabrics.stretch,fabrics.anti_billing, fabrics.buttery_soft, fabrics.pre_shrunk, fabrics.wrinkle_free, fabrics.color_and_fit_retention, fabrics.breathable, fabrics.durable, fabrics.lightweight, fabrics.natural_softness from products JOIN fabrics ON products.fabric = fabrics.name WHERE id=$1',
+    `SELECT ${columns} from products ${joins} WHERE id=$1`,
     [id]
   );
   // if no product found send err
@@ -50,7 +54,7 @@ exports.createProduct = catchAsync(async (req, res, next) => {
     return validated_values[key];
   });
 
-  // // 3) insert to DB
+  // 3) insert to DB
   const columns = [];
   const columns_num = [];
   Object.keys(validated_values).forEach((key, i) => {
@@ -131,7 +135,10 @@ exports.deleteProductById = catchAsync(async (req, res, next) => {
 exports.getNewReleases = catchAsync(async (req, res, next) => {
   // 1) new releases products are the products from the last 6 month
   const condition = `created_at > current_date - 180`;
-  const query = `SELECT products.id,products.name,products.type,products.fabric,products.price,products.cut,products.collar,products.color,products.color_hex,products.small_size,products.medium_size,products.large_size,products.x_large_size,products.xx_large_size,products.image_cover,products.image_detail,products.slug FROM products WHERE ${condition} `;
+
+  const columns = `products.id,products.name,products.type,products.fabric,products.price,products.cut,products.collar,products.color,products.color_hex,products.small_size,products.medium_size,products.large_size,products.x_large_size,products.xx_large_size,products.image_cover,products.image_detail,products.slug`;
+
+  const query = `SELECT ${columns} FROM products WHERE ${condition} `;
   const { rowCount, rows } = await db.query(query);
   // 2) send res
   res.status(200).json({

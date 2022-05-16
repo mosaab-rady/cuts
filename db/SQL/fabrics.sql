@@ -1,5 +1,7 @@
 CREATE TABLE fabrics (
 	name VARCHAR(50) PRIMARY KEY,
+	material_and_care TEXT[],
+	why_we_made_this TEXT,
 	stretch BOOLEAN DEFAULT false,
 	anti_billing BOOLEAN DEFAULT false,
 	buttery_soft BOOLEAN DEFAULT false,
