@@ -1,5 +1,5 @@
 CREATE TABLE collections (
-	id BIGSERIAL PRIMARY KEY,
+	id uuid PRIMARY KEY DEFAULT uuid_generate_v4 (),
 	name VARCHAR(30) NOT NULL UNIQUE,
 	image_hero TEXT,
 	image_cover TEXT NOT NULL ,

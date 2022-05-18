@@ -1,7 +1,7 @@
 CREATE TABLE reviews (
-	id BIGSERIAL PRIMARY KEY,
-	product BIGSERIAL NOT NULL REFERENCES products (id),
-	user_id BIGSERIAL NOT NULL REFERENCES users (id),
+	id uuid PRIMARY KEY DEFAULT uuid_generate_v4 (),
+	product uuid NOT NULL REFERENCES products (id),
+	user_id uuid NOT NULL REFERENCES users (id),
 	review TEXT NOT NULL,
 	title VARCHAR(150) NOT NULL,
 	score INTEGER NOT NULL,

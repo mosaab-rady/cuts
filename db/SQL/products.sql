@@ -1,5 +1,5 @@
 CREATE TABLE products (
-	id BIGSERIAL PRIMARY  KEY,
+	id uuid PRIMARY KEY DEFAULT uuid_generate_v4 (),
 	name VARCHAR(50) NOT NULL,
 	type VARCHAR(20) NOT NULL REFERENCES types (type),
 	fabric VARCHAR(50) NOT NULL REFERENCES fabrics (name), 
