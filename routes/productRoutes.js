@@ -21,8 +21,8 @@ router.get('/overview/:type', productController.getTypeOverview);
 // );
 
 router.route('/').get(productController.getAllProducts).post(
-  // authController.protect,
-  // authController.restrictTo('admin'),
+  authController.protect,
+  authController.restrictTo('admin'),
   // productController.getCollectionId,
   // productController.uploadProductImages,
   // productController.resizeProductImages,
@@ -33,15 +33,15 @@ router
   .route('/:id')
   .get(productController.getProductById)
   .patch(
-    //     authController.protect,
-    //     authController.restrictTo('admin'),
+    authController.protect,
+    authController.restrictTo('admin'),
     //     productController.uploadProductImages,
     //     productController.resizeProductImages,
     productController.updateProductById
   )
   .delete(
-    // authController.protect,
-    // authController.restrictTo('admin'),
+    authController.protect,
+    authController.restrictTo('admin'),
     productController.deleteProductById
   );
 

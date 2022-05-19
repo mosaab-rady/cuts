@@ -4,9 +4,11 @@ const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
 const bcrypt = require('bcrypt');
 const { promisify } = require('util');
+const userShema = require('../db/userSchema');
+const db = require('../db');
 
 const createSendToken = (user, statusCode, res) => {
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
     expiresIn: '90d',
   });
 
@@ -33,13 +35,45 @@ const createSendToken = (user, statusCode, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const newUser = await User.create({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
+  // 1) get user data
+  const { first_name, last_name, email, password } = req.body;
+  // 2) validate data
+  const validated_values = await userShema.validateAsync({
+    first_name,
+    last_name,
+    email,
+    password,
+  });
+  // 3) encrypt password
+  validated_values.password = await bcrypt.hash(validated_values.password, 12);
+  // 4) insert into data
+  // get query values
+  const query_values = Object.keys(validated_values).map(
+    (key) => validated_values[key]
+  );
+
+  // get columns columns_num
+  const columns = [];
+  const columns_num = [];
+  Object.keys(validated_values).forEach((key, i) => {
+    columns.push(key);
+    columns_num.push(`$${i + 1}`);
   });
 
-  createSendToken(newUser, 201, res);
+  const query = `INSERT INTO users (${columns.join(
+    ','
+  )}) VALUES (${columns_num.join(',')}) RETURNING *`;
+
+  const { rows } = await db.query(query, query_values);
+  // 5) send token
+  createSendToken(rows[0], 201, res);
+  ///////////////////////
+  // const newUser = await User.create({
+  //   name: req.body.name,
+  //   email: req.body.email,
+  //   password: req.body.password,
+  // });
+  // createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -50,13 +84,16 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('please provide email and password.', 400));
   }
   // 3) get the user from database
-  const user = await User.findOne({ email }).select('+password');
+  const { rows } = await db.query(`SELECT * FROM users WHERE email=$1`, [
+    email,
+  ]);
+  // const user = await User.findOne({ email }).select('+password');
   // 4) if no user or wrong password send error
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+  if (!rows[0] || !(await bcrypt.compare(password, rows[0].password))) {
     return next(new AppError('Incorrect email or password.', 401));
   }
   // 5) send cookie
-  createSendToken(user, 200, res);
+  createSendToken(rows[0], 200, res);
 });
 
 exports.logout = (req, res, next) => {
@@ -93,7 +130,12 @@ exports.protect = catchAsync(async (req, res, next) => {
   // );
 
   // 4) check for the user
-  const currentUser = await User.findById(decoded.id);
+  const { rows } = await db.query(
+    `SELECT id,first_name,last_name,email,role,created_at FROM users WHERE id=$1`,
+    [decoded.id]
+  );
+  const currentUser = rows[0];
+  // const currentUser = await User.findById(decoded.id);
   // 5) if no user send error
   if (!currentUser)
     return next(

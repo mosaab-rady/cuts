@@ -46,13 +46,13 @@ const authController = require('../conrollers/authController');
 router
   .route('/')
   .get(
-    //     authController.protect,
-    //     authController.restrictTo('admin'),
+    authController.protect,
+    authController.restrictTo('admin'),
     collectionController.grtAllCollections
   )
   .post(
-    //     authController.protect,
-    //     authController.restrictTo('admin'),
+    authController.protect,
+    authController.restrictTo('admin'),
     //     collectionController.uploadImage,
     //     collectionController.resizeImage,
     collectionController.createNewCollection
@@ -67,15 +67,15 @@ router
   .route('/:id')
   .get(collectionController.getCollectionById)
   .patch(
-    //     authController.protect,
-    //     authController.restrictTo('admin'),
+    authController.protect,
+    authController.restrictTo('admin'),
     //     collectionController.uploadImage,
     //     collectionController.resizeImage,
     collectionController.updateCollectionById
   )
   .delete(
-    //     authController.protect,
-    //     authController.restrictTo('admin'),
+    authController.protect,
+    authController.restrictTo('admin'),
     collectionController.deleteCollectionById
   );
 

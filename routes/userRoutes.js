@@ -5,16 +5,16 @@ const userController = require('../conrollers/userController');
 const authController = require('../conrollers/authController');
 const reviewRoutes = require('./reviewRoutes');
 
-// router.post('/signup', authController.signup);
-// router.post('/login', authController.login);
-// router.get('/logout', authController.logout);
+router.post('/signup', authController.signup);
+router.post('/login', authController.login);
+router.get('/logout', authController.logout);
 // router.get('/isloggedin', authController.isLoggedIn);
 
-// router.use(authController.protect);
+router.use(authController.protect);
 
 // router.use('/:userid/reviews', reviewRoutes);
 
-// router.use(authController.restrictTo('admin'));
+router.use(authController.restrictTo('admin'));
 
 router
   .route('/')
