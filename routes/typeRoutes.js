@@ -3,6 +3,10 @@ const router = express.Router();
 
 const typesController = require('../conrollers/typeController');
 
+const authController = require('../conrollers/authController');
+
+router.use(authController.protect, authController.restrictTo('admin'));
+
 router
   .route('/')
   .get(typesController.get_all_types)

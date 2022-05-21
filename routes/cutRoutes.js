@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 const cutsController = require('../conrollers/cutController');
+const authController = require('../conrollers/authController');
+
+router.use(authController.protect, authController.restrictTo('admin'));
 
 router
   .route('/')

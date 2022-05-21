@@ -3,6 +3,10 @@ const router = express.Router();
 
 const fabricController = require('../conrollers/fabricController');
 
+const authController = require('../conrollers/authController');
+
+router.use(authController.protect, authController.restrictTo('admin'));
+
 router
   .route('/')
   .get(fabricController.get_all_fabrics)
