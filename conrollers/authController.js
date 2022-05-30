@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt');
 const { promisify } = require('util');
 const userShema = require('../db/userSchema');
 const db = require('../db');
+const Email = require('../utils/email');
+// const sendEmail = require('../utils/email');
 
 const createSendToken = (user, statusCode, res) => {
   const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
@@ -13,7 +15,7 @@ const createSendToken = (user, statusCode, res) => {
   });
 
   const cookieOptions = {
-    expires: new Date(Date.now + 90 * 24 * 60 * 60 * 1000),
+    expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
     httpOnly: true,
   };
   if (process.env.NODE_ENV === 'production') {
@@ -65,6 +67,18 @@ exports.signup = catchAsync(async (req, res, next) => {
   )}) VALUES (${columns_num.join(',')}) RETURNING *`;
 
   const { rows } = await db.query(query, query_values);
+
+  // send welcome email
+  await new Email({
+    to: rows[0].email,
+    first_name: rows[0].first_name,
+  }).welcome();
+
+  // await sendEmail({
+  //   to: rows[0].email,
+  //   subject: 'Welcome to cuts !!!',
+  // });
+
   // 5) send token
   createSendToken(rows[0], 201, res);
   ///////////////////////
@@ -93,6 +107,7 @@ exports.login = catchAsync(async (req, res, next) => {
     return next(new AppError('Incorrect email or password.', 401));
   }
   // 5) send cookie
+
   createSendToken(rows[0], 200, res);
 });
 
