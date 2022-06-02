@@ -3,12 +3,15 @@ const express = require('express');
 const router = express.Router();
 
 const collectionController = require('../conrollers/collectionController');
-const productRoutes = require('./productRoutes');
+const imagesController = require('../conrollers/ImageController');
 const authController = require('../conrollers/authController');
 
-// router
-//   .route('/testPic')
-//   .post(collectionController.uploadImage, collectionController.resizeImage);
+router
+  .route('/testPic')
+  .post(
+    imagesController.multerUploadImages,
+    imagesController.resizeImageAndUploadToS3
+  );
 
 // router.use('/:collectionId/product', productRoutes);
 
