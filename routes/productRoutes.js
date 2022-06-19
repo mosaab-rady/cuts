@@ -5,6 +5,7 @@ const router = express.Router({ mergeParams: true });
 const productController = require('../conrollers/productController');
 const reviewRoutes = require('./reviewRoutes');
 const authController = require('../conrollers/authController');
+const imageController = require('../conrollers/ImageController');
 
 router.use('/:productId/reviews', reviewRoutes);
 
@@ -20,14 +21,16 @@ router.get('/overview/:type', productController.getTypeOverview);
 //   productController.getAccountProducts
 // );
 
-router.route('/').get(productController.getAllProducts).post(
-  authController.protect,
-  authController.restrictTo('admin'),
-  // productController.getCollectionId,
-  // productController.uploadProductImages,
-  // productController.resizeProductImages,
-  productController.createProduct
-);
+router
+  .route('/')
+  .get(productController.getAllProducts)
+  .post(
+    authController.protect,
+    authController.restrictTo('admin'),
+    imageController.multerUploadImages,
+    imageController.resizeImageAndUploadToS3,
+    productController.createProduct
+  );
 
 router
   .route('/:id')
@@ -35,8 +38,8 @@ router
   .patch(
     authController.protect,
     authController.restrictTo('admin'),
-    //     productController.uploadProductImages,
-    //     productController.resizeProductImages,
+    imageController.multerUploadImages,
+    imageController.resizeImageAndUploadToS3,
     productController.updateProductById
   )
   .delete(
